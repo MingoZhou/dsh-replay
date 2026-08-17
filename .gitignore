@@ -1,0 +1,5 @@
+node_modules/
+lib/
+demo/dist/
+*.log
+src/client/mascot-image.ts
