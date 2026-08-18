@@ -56,9 +56,11 @@ Dark mode follows the harness theme. Loading and empty states are hosted by **Ji
 
 ## 🚀 Quick start
 
-### Try it first (zero install)
+### 1️⃣ Try it first — zero install
 
-### Install into DeepSeek Harness — one command
+**Online demo:** https://mingozhou.github.io/dsh-replay/ — three sample sessions, full UI, zero install.
+
+### 2️⃣ Install into DeepSeek Harness — one npm command
 
 The npm package ships **prebuilt**: no cloning, no building, no `allowBuilds` approval.
 
@@ -70,56 +72,22 @@ dsh plugin --profile <your-profile> add @mingozhou/dsh-replay
 #   run inside the harness repo directory
 pnpm dsh plugin --profile web add @mingozhou/dsh-replay
 ```
+
 Verify with `dsh --profile <your-profile> --dump-config` (expect a `# == @mingozhou/dsh-replay` section), then restart the harness (`dsh web --profile <your-profile>` / `pnpm dsh web`) and open http://127.0.0.1:3080. You now have **two entries**:
 
 1. the **Session Replay** button at the bottom-left of the sidebar (opens a full-screen modal with a session picker), and
 
 2. a **Replay** tab inside every open conversation.
 
-
-### Try it without a harness
-
-**Online demo:** https://mingozhou.github.io/dsh-replay/ — three sample sessions, full UI, zero install.
-
-### Install into DeepSeek Harness
-
-**Case A — you use the released CLI** (`npm i -g @deepseek-ai/dsh`):
-
+### 3️⃣ Install from a cloned repo (development / unreleased changes)
 ```sh
 git clone https://github.com/MingoZhou/dsh-replay.git
+cd dsh-replay
+npm install && npm run build      # lib/ is a build artifact — required after every fresh clone
+npm run demo                      # local demo → http://localhost:4173
 
-# build the plugin once
-cd <path-to>/dsh-replay && npm install && npm run build
-
-# add it to the profile you actually use (list them: ls ~/.dsh/profiles)
+# then point your profile at the folder instead of npm:
 dsh plugin --profile <your-profile> add <absolute-path-to>/dsh-replay
-dsh --profile <your-profile> --dump-config     # expect a "# == dsh-replay" section
-dsh web --profile <your-profile>
-```
-
-**Case B — you run the harness from a source checkout** (`pnpm dsh web`):
-
-```sh
-# build the plugin once
-cd <path-to>/dsh-replay && npm install && npm run build
-
-# note: `pnpm dsh web` boots the profile named "web"
-cd <path-to>/deepseek-harness
-pnpm dsh plugin --profile web add <absolute-path-to>/dsh-replay
-pnpm dsh --profile web --dump-config           # expect a "# == dsh-replay" section
-pnpm dsh web
-```
-
-Open http://127.0.0.1:3080 — you now have **two entries**:
-
-1. the **Session Replay** button at the bottom-left of the sidebar (opens a full-screen modal with a session picker), and
-2. a **Replay** tab inside every open conversation.
-
-Installing from npm (`dsh plugin --profile <p> add dsh-replay`, once published) or from a git URL also works; git installs run the package's `prepare` build, which the harness requires you to allowlist in the profile's `pnpm-workspace.yaml`:
-
-```yaml
-allowBuilds:
-  dsh-replay: true
 ```
 
 ## 🧹 Uninstall

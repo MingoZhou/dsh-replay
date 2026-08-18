@@ -57,50 +57,44 @@ DeepSeek Harness 有一套优雅的 append-only 日志,官方承诺"到达模型
 
 ## 🚀 快速上手
 
-### 先试试(零安装)
+### 1️⃣ 先试试(零安装)
 
-**在线 Demo:** https://mingozhou.github.io/dsh-replay/ 
+**在线 Demo:** https://mingozhou.github.io/dsh-replay/ —— 三个示例会话、完整 UI、零安装。
 
-### 装进 DeepSeek Harness
+### 2️⃣ 装进 DeepSeek Harness —— npm 一条命令
 
-**情况 A —— 你用的是发行版 CLI**(`npm i -g @deepseek-ai/dsh`):
-
-```sh
-git clone https://github.com/MingoZhou/dsh-replay.git
-
-# 先构建插件(一次即可)
-cd <插件路径>/dsh-replay && npm install && npm run build
-
-# 加进你实际在用的 profile(列出所有 profile:ls ~/.dsh/profiles)
-dsh plugin --profile <你的profile> add <插件绝对路径>/dsh-replay
-dsh --profile <你的profile> --dump-config     # 应出现 "# == dsh-replay" 一段
-dsh web --profile <你的profile>
-```
-
-**情况 B —— 你从源码仓库跑 Harness**(`pnpm dsh web`):
+npm 包是**预构建成品**:不用 clone、不用 build、不用 `allowBuilds` 放行。
 
 ```sh
-# 先构建插件(一次即可)
-cd <插件路径>/dsh-replay && npm install && npm run build
+# 发行版 CLI(npm i -g @deepseek-ai/dsh);查看已有 profile:ls ~/.dsh/profiles
+dsh plugin --profile <你的profile> add @mingozhou/dsh-replay
 
-# 注意:`pnpm dsh web` 实际挂载的是名为 "web" 的 profile
-cd <Harness源码路径>/deepseek-harness
-pnpm dsh plugin --profile web add <插件绝对路径>/dsh-replay
-pnpm dsh --profile web --dump-config          # 应出现 "# == dsh-replay" 一段
+# 从源码仓库跑的 Harness(`pnpm dsh web` 挂载的 profile 名是 "web"):
+#   在 harness 仓库目录里执行
+cd 'path_to_your_project/deepseel-harness'
+pnpm dsh plugin --profile web add @mingozhou/dsh-replay
+# 然后重启就可以使用了
 pnpm dsh web
 ```
 
-打开 http://127.0.0.1:3080 ,你会得到**两个入口**:
+用 `dsh --profile <你的profile> --dump-config` 验证(应出现 `# == @mingozhou/dsh-replay` 一段),然后重启 Harness(`dsh web --profile <你的profile>` / `pnpm dsh web`),打开 http://127.0.0.1:3080 。你会得到**两个入口**:
 
 1. 侧栏左下角的 **会话回放** 按钮(弹出带会话选择器的全屏弹窗);
+
 2. 每个会话视图里的 **Replay** 标签页。
 
-从 npm(发布后 `dsh plugin --profile <p> add dsh-replay`)或 git URL 安装也可以;git 安装会执行包的 `prepare` 构建,Harness 要求在 profile 的 `pnpm-workspace.yaml` 里显式放行:
+### 3️⃣ 克隆仓库安装(开发调试 / 试未发布的改动)
 
-```yaml
-allowBuilds:
-  dsh-replay: true
+```sh
+git clone https://github.com/MingoZhou/dsh-replay.git
+cd dsh-replay
+npm install && npm run build      # lib/ 是构建产物,每次重新 clone 后都要构建
+npm run demo                      # 本地 demo → http://localhost:4173
+
+# 然后让 profile 指向文件夹而不是 npm:
+dsh plugin --profile <你的profile> add <插件绝对路径>/dsh-replay
 ```
+
 
 ## 🧹 卸载
 
