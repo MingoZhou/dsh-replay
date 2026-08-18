@@ -58,20 +58,36 @@ Dark mode follows the harness theme. Loading and empty states are hosted by **Ji
 
 ### Try it first (zero install)
 
-**Online demo:** https://mingozhou.github.io/dsh-replay/ — or locally:
+### Install into DeepSeek Harness — one command
+
+The npm package ships **prebuilt**: no cloning, no building, no `allowBuilds` approval.
 
 ```sh
-git clone https://github.com/MingoZhou/dsh-replay.git
-cd dsh-replay
-npm install && npm run build
-npm run demo        # → http://localhost:4173
+# released CLI (npm i -g @deepseek-ai/dsh); list your profiles with: ls ~/.dsh/profiles
+dsh plugin --profile <your-profile> add @mingozhou/dsh-replay
+
+# harness running from a source checkout (`pnpm dsh web` uses the profile named "web"):
+#   run inside the harness repo directory
+pnpm dsh plugin --profile web add @mingozhou/dsh-replay
 ```
+Verify with `dsh --profile <your-profile> --dump-config` (expect a `# == @mingozhou/dsh-replay` section), then restart the harness (`dsh web --profile <your-profile>` / `pnpm dsh web`) and open http://127.0.0.1:3080. You now have **two entries**:
+
+1. the **Session Replay** button at the bottom-left of the sidebar (opens a full-screen modal with a session picker), and
+
+2. a **Replay** tab inside every open conversation.
+
+
+### Try it without a harness
+
+**Online demo:** https://mingozhou.github.io/dsh-replay/ — three sample sessions, full UI, zero install.
 
 ### Install into DeepSeek Harness
 
 **Case A — you use the released CLI** (`npm i -g @deepseek-ai/dsh`):
 
 ```sh
+git clone https://github.com/MingoZhou/dsh-replay.git
+
 # build the plugin once
 cd <path-to>/dsh-replay && npm install && npm run build
 

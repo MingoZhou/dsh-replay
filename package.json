@@ -1,5 +1,5 @@
 {
-  "name": "dsh-replay",
+  "name": "@mingozhou/dsh-replay",
   "version": "0.3.3",
   "description": "Session replay, fork-tree, audit & compare visualization for DeepSeek Harness — time machine for your agent sessions",
   "main": "lib/index.js",
@@ -99,5 +99,9 @@
     "url": "https://github.com/MingoZhou/dsh-replay"
   },
   "homepage": "https://mingozhou.github.io/dsh-replay/",
-  "bugs": "https://github.com/MingoZhou/dsh-replay/issues"
+  "bugs": "https://github.com/MingoZhou/dsh-replay/issues",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  }
 }

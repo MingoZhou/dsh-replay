@@ -54,24 +54,20 @@ DeepSeek Harness 有一套优雅的 append-only 日志,官方承诺"到达模型
 
 深色模式跟随 Harness 主题。加载与空状态由原创鲸猫娘吉祥物 **鲸小深** 值班(不喜欢可一行 CSS 隐藏:`.dshr-mascot { display: none }`)。
 
+
 ## 🚀 快速上手
 
 ### 先试试(零安装)
 
-**在线 Demo:** https://mingozhou.github.io/dsh-replay/ ,或本地跑:
-
-```sh
-git clone https://github.com/MingoZhou/dsh-replay.git
-cd dsh-replay
-npm install && npm run build
-npm run demo        # → http://localhost:4173
-```
+**在线 Demo:** https://mingozhou.github.io/dsh-replay/ 
 
 ### 装进 DeepSeek Harness
 
 **情况 A —— 你用的是发行版 CLI**(`npm i -g @deepseek-ai/dsh`):
 
 ```sh
+git clone https://github.com/MingoZhou/dsh-replay.git
+
 # 先构建插件(一次即可)
 cd <插件路径>/dsh-replay && npm install && npm run build
 

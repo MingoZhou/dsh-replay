@@ -1,6 +1,6 @@
 # dsh-replay bundle layer — inserted into the profile's plugin composition.
 - insert:
     - id: replay
-      name: dsh-replay
+      name: '@mingozhou/dsh-replay'
       config:
         routePrefix: /replay/api
