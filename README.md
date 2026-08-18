@@ -15,8 +15,7 @@ Replay · Audit · Cost · Fork tree · Compare — inside the DeepSeek Harness 
 **[🎮 Live demo](https://mingozhou.github.io/dsh-replay/)** · [中文文档](./README.zh.md) · [Install](#-quick-start) · [FAQ](#-faq--troubleshooting)
 
 <img src="./assets/start.png" width="880" alt="overview dashboard" />
-
-<img src="./assets/overview-light.png" width="880" alt="overview dashboard" />
+<img src="./assets/demo.gif" width="880" alt="dsh‑replay operation demo" />
 
 </div>
 
@@ -48,6 +47,7 @@ DeepSeek Harness keeps a beautiful append-only log where *everything that reache
 | 🌏 **EN / 中文** | Whole UI switches language (findings and meta labels included); auto-detected, one-click toggle |
 
 <div align="center">
+<img src="./assets/overview-light.png" width="880" alt="overview dashboard" />
 <img src="./assets/timeline-light.png" width="880" alt="timeline replay" />
 <img src="./assets/audit-light.png" width="880" alt="security audit" />
 </div>

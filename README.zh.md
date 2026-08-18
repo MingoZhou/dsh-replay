@@ -15,6 +15,7 @@
 **[🎮 在线 Demo](https://mingozhou.github.io/dsh-replay/)** · [English](./README.md) · [安装](#-快速上手) · [常见问题](#-常见问题排查)
 
 <img src="./assets/overview-light.png" width="880" alt="概览仪表盘" />
+<img src="./assets/demo.gif" width="880" alt="dsh‑replay operation demo" />
 
 </div>
 
@@ -46,6 +47,7 @@ DeepSeek Harness 有一套优雅的 append-only 日志,官方承诺"到达模型
 | 🌏 **中英双语** | 整个 UI 可切换语言(审计发现、元事件标签都翻译);自动检测,一键切换 |
 
 <div align="center">
+<img src="./assets/overview-light.png" width="880" alt="overview dashboard" />
 <img src="./assets/timeline-light.png" width="880" alt="时间线回放" />
 <img src="./assets/audit-light.png" width="880" alt="安全审计" />
 </div>
