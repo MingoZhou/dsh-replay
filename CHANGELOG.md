@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.4.1 — fix: harness rc.8 compatibility
+
 ## 0.4.0 — 2026-08-18
 - Published to npm as `@mingozhou/dsh-replay` (prebuilt, one-command install)
 - README restructured: online demo → npm → clone from source

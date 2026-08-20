@@ -91,7 +91,7 @@ ${cjs}
     return module.exports;
   };
   if (typeof window !== 'undefined' && window.__ModuleLoader__) {
-    window.__ModuleLoader__.load({ id: 'dsh-replay', factory: factory });
+    window.__ModuleLoader__.load({ id: '@mingozhou/dsh-replay', factory: factory });
   } else if (typeof module !== 'undefined' && module.exports) {
     module.exports = factory(typeof require === 'function' ? require : function (id) {
       throw new Error('unresolvable external: ' + id);

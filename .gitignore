@@ -3,5 +3,3 @@ lib/
 demo/dist/
 *.log
 src/client/mascot-image.ts
-.idea
-
