@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Live demo / 在线 demo
+    url: https://mingozhou.github.io/dsh-replay/
+    about: Try the UI on sample sessions before opening an issue. / 先用示例会话试一下。
+  - name: Discussions / 讨论区
+    url: https://github.com/MingoZhou/dsh-replay/discussions
+    about: Ask a question, share a workflow, or show what you built. / 提问、分享用法或作品。
+  - name: Security report / 安全问题
+    url: https://github.com/MingoZhou/dsh-replay/security/advisories/new
+    about: Please report sensitive-data or auth issues privately. / 敏感数据或权限问题请私下报告。

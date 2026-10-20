@@ -1,0 +1,54 @@
+name: Feature request / 功能建议
+description: Suggest an improvement or a new workflow / 提一个改进或新场景
+title: "[feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the idea! Please describe the workflow, not only the UI.
+        感谢建议！先说清楚使用场景，比只说“加个按钮”更有帮助。
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve? / 你想解决什么问题？
+      description: The session, the task, and where the current flow breaks.
+      placeholder: "Example: a 6-hour session with 40 subagents; I need to find the one branch that cost the most…"
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would you like to happen? / 你希望它怎么工作？
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area / 模块
+      options:
+        - Dashboard / 仪表盘
+        - Cost / 成本
+        - Audit / 审计
+        - Timeline / 时间线
+        - Fork tree / 分支
+        - Compare / 对比
+        - Export / 导出
+        - Install / 安装
+        - Other / 其他
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: dsh-replay version / 版本
+      placeholder: "0.4.2"
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting / 提交前
+      options:
+        - label: I checked the README and the live demo / 我看过 README 和在线 demo
+          required: true
+        - label: This is not a security report / 这不是安全问题（安全问题请走 SECURITY.md）
+          required: true

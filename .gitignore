@@ -1,0 +1,10 @@
+node_modules/
+lib/
+demo/dist/
+*.log
+src/client/mascot-image.ts
+_tmp/
+.pnpm-store/
+screen-test*.png
+cookies.db
+.idea/
