@@ -4,7 +4,6 @@
  * Registers a small read-only HTTP API on the harness web server that the
  * browser half (and nothing else) consumes:
  *
-<<<<<<< HEAD
  *   GET /replay/api/sessions            → { sessions: [{ header, title, live }] }
  *   GET /replay/api/session/<id>        → { header, events }
  *   GET /replay/api/summary?limit=30    → aggregate stats for the dashboard
@@ -16,22 +15,12 @@
  * The API is intentionally loopback-only by default: session logs can contain
  * secrets, and this route is registered directly on the web server rather than
  * through the authenticated Connection fetch bridge.
-=======
- *   GET /replay/api/sessions            → { sessions: [{ header, title }] }
- *   GET /replay/api/session/<id>        → { header, events }
- *
- * Reads go through `ctx.sessionQuery` (live-preferred corpus), so an open
- * session replays with its in-memory state, not a stale disk artifact.
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
  */
 import type { Context } from '@deepseek-ai/cordis'
 import { readFile } from 'node:fs/promises'
 import type { IncomingMessage, ServerResponse } from 'node:http'
-<<<<<<< HEAD
 import { auditSession, buildTimeline, fromInspection } from './core/index.js'
 import type { ParsedSession, SessionEvent, SessionHeader, StorageRecord } from './core/types.js'
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 
 export const name = 'dsh-replay'
 
@@ -40,23 +29,17 @@ export const inject = ['webServer', 'sessionQuery']
 export interface Config {
   /** URL prefix for the replay API (exact-prefix route). */
   routePrefix?: string
-<<<<<<< HEAD
   /** Allow non-loopback clients. Off by default because the route is unauthenticated. */
   allowRemote?: boolean
   /** Maximum sessions included in one dashboard summary request. */
   summaryLimit?: number
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 }
 
 interface SessionQueryLike {
   listSessions: (signal?: AbortSignal) => Promise<unknown[]>
   readSession: (sessionId: string) => Promise<unknown>
   readTitleSnapshots?: (ids: string[], signal?: AbortSignal) => Promise<unknown[]>
-<<<<<<< HEAD
   readTitle?: (id: string, signal?: AbortSignal) => Promise<unknown>
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 }
 
 interface WebServerLike {
@@ -67,7 +50,6 @@ interface WebServerLike {
   }) => () => void
 }
 
-<<<<<<< HEAD
 export interface SessionEntry {
   header: Record<string, unknown>
   title?: string
@@ -119,14 +101,6 @@ function json(res: ServerResponse, status: number, body: unknown, head = false):
     'referrer-policy': 'no-referrer',
   })
   res.end(head ? undefined : JSON.stringify(body))
-=======
-function json(res: ServerResponse, status: number, body: unknown): void {
-  res.writeHead(status, {
-    'content-type': 'application/json; charset=utf-8',
-    'cache-control': 'no-store',
-  })
-  res.end(JSON.stringify(body))
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 }
 
 function get(obj: unknown, key: string): unknown {
@@ -143,7 +117,6 @@ function headerOf(record: unknown): Record<string, unknown> | undefined {
   return undefined
 }
 
-<<<<<<< HEAD
 /** Titles may arrive as a string, `{ title }`, or a settled snapshot wrapper. */
 function titleOf(record: unknown, depth = 4): string | undefined {
   if (typeof record === 'string') return record === '' ? undefined : record
@@ -153,23 +126,10 @@ function titleOf(record: unknown, depth = 4): string | undefined {
   for (const key of ['value', 'session', 'meta']) {
     const found = titleOf((record as Record<string, unknown>)[key], depth - 1)
     if (found !== undefined) return found
-=======
-/** Depth-limited recursive search for a non-empty string `title` field. */
-function titleOf(record: unknown, depth = 3): string | undefined {
-  if (typeof record !== 'object' || record === null || depth < 0) return undefined
-  const direct = (record as Record<string, unknown>)['title']
-  if (typeof direct === 'string' && direct.length > 0) return direct
-  for (const value of Object.values(record)) {
-    if (typeof value === 'object' && value !== null) {
-      const found = titleOf(value, depth - 1)
-      if (found !== undefined) return found
-    }
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   }
   return undefined
 }
 
-<<<<<<< HEAD
 function eventsOf(record: unknown): StorageRecord[] {
   const events = get(record, 'events') ?? get(get(record, 'session'), 'events')
   return Array.isArray(events) ? (events as StorageRecord[]) : []
@@ -389,62 +349,11 @@ export function apply(ctx: Context, config: Config = {}): void {
         const selected = entries.slice(0, limit)
         const summaries = await mapLimit(selected, 4, summarize)
         json(res, 200, { sessions: summaries, total: entries.length }, head)
-=======
-export function apply(ctx: Context, config: Config = {}): void {
-  const prefix = config.routePrefix ?? '/replay/api'
-  const webServer = (ctx as unknown as { webServer: WebServerLike }).webServer
-  const sessionQuery = (ctx as unknown as { sessionQuery: SessionQueryLike }).sessionQuery
-
-  const handler = async (req: IncomingMessage, res: ServerResponse): Promise<void> => {
-    const url = new URL(req.url ?? '/', 'http://localhost')
-    const rest = url.pathname.slice(prefix.length).replace(/^\//u, '')
-    try {
-      if (req.method !== 'GET' && req.method !== 'HEAD') {
-        json(res, 405, { error: 'method not allowed' })
-        return
-      }
-      if (rest === 'sessions') {
-        const records = await sessionQuery.listSessions()
-        const headers = records.map(headerOf).filter((h): h is Record<string, unknown> => h !== undefined)
-        const titles = new Map<string, string>()
-        if (sessionQuery.readTitleSnapshots !== undefined) {
-          try {
-            const snapshots = await sessionQuery.readTitleSnapshots(headers.map(h => String(h['id'])))
-            snapshots.forEach((snapshot, i) => {
-              const title = titleOf(snapshot)
-              const id = headers[i]?.['id']
-              if (title !== undefined && typeof id === 'string') titles.set(id, title)
-            })
-          } catch {
-            /* titles are decoration — never fail the listing over them */
-          }
-        }
-        // Per-id fallback for engines where the batch call misses.
-        const readTitle = (sessionQuery as { readTitle?: (id: string) => Promise<unknown> }).readTitle
-        if (readTitle !== undefined) {
-          await Promise.all(
-            headers
-              .filter(h => !titles.has(String(h['id'])))
-              .map(async h => {
-                try {
-                  const title = titleOf(await readTitle.call(sessionQuery, String(h['id'])))
-                  if (title !== undefined) titles.set(String(h['id']), title)
-                } catch {
-                  /* decoration only */
-                }
-              }),
-          )
-        }
-        json(res, 200, {
-          sessions: headers.map(h => ({ header: h, title: titles.get(String(h['id'])) })),
-        })
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
         return
       }
       if (rest === 'viewer.js') {
         // The standalone viewer bundle (sibling artifact of this module),
         // inlined into exported HTML files by the browser half.
-<<<<<<< HEAD
         let source = viewerCache.get('viewer')
         if (source === undefined) {
           source = await readFile(new URL('./viewer.js', import.meta.url), 'utf8')
@@ -456,18 +365,12 @@ export function apply(ctx: Context, config: Config = {}): void {
           'x-content-type-options': 'nosniff',
         })
         res.end(head ? undefined : source)
-=======
-        const source = await readFile(new URL('./viewer.js', import.meta.url), 'utf8')
-        res.writeHead(200, { 'content-type': 'text/javascript; charset=utf-8' })
-        res.end(source)
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
         return
       }
       if (rest.startsWith('session/')) {
         const id = decodeURIComponent(rest.slice('session/'.length))
         const snapshot = await sessionQuery.readSession(id)
         const header = headerOf(snapshot) ?? headerOf(get(snapshot, 'session'))
-<<<<<<< HEAD
         if (header === undefined) {
           json(res, 404, { error: 'session not found' }, head)
           return
@@ -480,20 +383,6 @@ export function apply(ctx: Context, config: Config = {}): void {
       // Do not leak filesystem paths or provider details to the browser.
       console.error('[dsh-replay] request failed', error)
       json(res, 500, { error: 'internal error' }, head)
-=======
-        const events =
-          get(snapshot, 'events') ?? get(get(snapshot, 'session'), 'events') ?? []
-        if (header === undefined) {
-          json(res, 404, { error: 'session not found' })
-          return
-        }
-        json(res, 200, { header, events })
-        return
-      }
-      json(res, 404, { error: 'unknown replay endpoint' })
-    } catch (error) {
-      json(res, 500, { error: String(error) })
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
     }
   }
 

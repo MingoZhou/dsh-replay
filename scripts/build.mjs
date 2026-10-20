@@ -8,11 +8,7 @@
  *   demo/dist/demo.js — fully self-contained demo bundle (react inlined).
  */
 import { build } from 'esbuild'
-<<<<<<< HEAD
 import { copyFile, mkdir, stat, writeFile } from 'node:fs/promises'
-=======
-import { copyFile, mkdir, writeFile } from 'node:fs/promises'
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 
 const cssAsText = { loader: { '.css': 'text' } }
 
@@ -82,11 +78,8 @@ const client = await build({
   jsx: 'automatic',
   ...cssAsText,
   external: ['react', 'react/jsx-runtime', 'react-dom', 'react-dom/client', '@deepseek-ai/*'],
-<<<<<<< HEAD
   minify: true,
   legalComments: 'none',
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   write: false,
 })
 const cjs = client.outputFiles[0].text
@@ -138,10 +131,7 @@ await build({
 })
 
 console.log('build ok: lib/index.js, lib/core.js, lib/client.js, lib/viewer.js, demo/dist/demo.js')
-<<<<<<< HEAD
 for (const file of ['lib/index.js', 'lib/core.js', 'lib/client.js', 'lib/viewer.js']) {
   const info = await stat(file)
   console.log(`  ${file.padEnd(16)} ${(info.size / 1024).toFixed(1)} KB`)
 }
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d

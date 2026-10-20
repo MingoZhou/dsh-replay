@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import React, { useState } from 'react'
-=======
-import React from 'react'
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 import type { TimelineItem, TimelineModel } from '../../core/timeline.js'
 import { formatClock, formatDuration, formatTokens } from '../api.js'
 import { useI18n } from '../i18n.js'
@@ -14,7 +10,6 @@ const KIND_COLOR: Record<string, string> = {
   meta: 'var(--dshr-s-meta)',
 }
 
-<<<<<<< HEAD
 function CopyButton({ text }: { text: string }): React.ReactElement {
   const { t } = useI18n()
   const [copied, setCopied] = useState(false)
@@ -31,8 +26,6 @@ function CopyButton({ text }: { text: string }): React.ReactElement {
   )
 }
 
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 export function ItemDetail({
   item,
   model,
@@ -61,7 +54,6 @@ export function ItemDetail({
         {item.step !== undefined && ` · step ${item.step}`}
       </div>
 
-<<<<<<< HEAD
       {item.reasoningText !== undefined && item.reasoningText !== '' && (
         <details className="dshr-reasoning">
           <summary>{t('detail.reasoning')}</summary>
@@ -75,11 +67,6 @@ export function ItemDetail({
             {t('detail.message')}
             <CopyButton text={item.text} />
           </div>
-=======
-      {item.text !== undefined && item.text !== '' && (
-        <>
-          <div className="dshr-section-label">{t('detail.message')}</div>
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
           <pre className="dshr-pre">{item.text}</pre>
         </>
       )}
@@ -104,7 +91,6 @@ export function ItemDetail({
               </>
             )}
           </dl>
-<<<<<<< HEAD
           <div className="dshr-section-label">
             {t('detail.arguments')}
             <CopyButton text={item.toolCall.argumentsPretty ?? item.toolCall.argumentsRaw} />
@@ -116,13 +102,6 @@ export function ItemDetail({
                 {t('detail.result')}
                 <CopyButton text={item.toolCall.resultText} />
               </div>
-=======
-          <div className="dshr-section-label">{t('detail.arguments')}</div>
-          <pre className="dshr-pre">{item.toolCall.argumentsPretty ?? item.toolCall.argumentsRaw}</pre>
-          {item.toolCall.resultText !== undefined && item.toolCall.resultText !== '' && (
-            <>
-              <div className="dshr-section-label">{t('detail.result')}</div>
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
               <pre className="dshr-pre">{item.toolCall.resultText}</pre>
             </>
           )}

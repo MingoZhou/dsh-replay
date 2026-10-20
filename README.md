@@ -42,7 +42,9 @@ Cost · Audit · Fork tree · Compare · Shareable HTML — **no model calls, no
 
 > Desktop profiles are managed by the Electron app. `dsh plugin --profile desktop …` is refused by design (`profile "desktop" is managed exclusively by the Electron application`). Use the Plugins page instead.
 
-<!-- Plugins page screenshot: the running Desktop window could not be captured from the sandbox (minimized + elevated). Add the image here when available. -->
+<img src="https://raw.githubusercontent.com/MingoZhou/dsh-replay/main/assets/plugins-installed.png" width="720" alt="DeepSeek Harness Plugins page with dsh-replay installed" />
+
+<sub>Plugins → Installed plugins. This is the 0.4.1 row; 0.4.2 uses the new description.</sub>
 
 ### Web UI / source checkout
 

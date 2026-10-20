@@ -1,6 +1,5 @@
 import React, { useMemo, useRef, useState } from 'react'
 import type { AuditReport } from '../../core/audit.js'
-<<<<<<< HEAD
 import {
   DEFAULT_PRICING,
   estimateCostDetailed,
@@ -12,12 +11,6 @@ import type { TimelineModel } from '../../core/timeline.js'
 import { formatClock, formatDuration, formatTokens } from '../api.js'
 import { useI18n } from '../i18n.js'
 import { resetPricing, setRate, usePricing } from '../pricing.js'
-=======
-import { estimateCost, formatUsd } from '../../core/cost.js'
-import type { TimelineModel } from '../../core/timeline.js'
-import { formatClock, formatDuration, formatTokens } from '../api.js'
-import { useI18n } from '../i18n.js'
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 
 /** Cumulative token samples for the line chart. */
 interface Point {
@@ -51,7 +44,6 @@ function CumulativeTokensChart({ model }: { model: TimelineModel }): React.React
   const points = useMemo<Point[]>(() => {
     let cumInput = 0
     let cumOutput = 0
-<<<<<<< HEAD
     const seqTime = new Map(model.items.map(item => [item.seq, item.time]))
     return model.usageSamples.map(sample => {
       cumInput += sample.usage.inputTokens + (sample.usage.cacheReadTokens ?? 0) + (sample.usage.cacheWriteTokens ?? 0)
@@ -59,15 +51,6 @@ function CumulativeTokensChart({ model }: { model: TimelineModel }): React.React
       return {
         x: seqTime.get(sample.seq) ?? model.startTime,
         seq: sample.seq, turn: sample.turn, step: sample.step,
-=======
-    const seqTime = new Map(model.items.map(i => [i.seq, i.time]))
-    return model.usageSamples.map(s => {
-      cumInput += s.usage.inputTokens + (s.usage.cacheReadTokens ?? 0) + (s.usage.cacheWriteTokens ?? 0)
-      cumOutput += s.usage.outputTokens
-      return {
-        x: seqTime.get(s.seq) ?? model.startTime,
-        seq: s.seq, turn: s.turn, step: s.step,
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
         cumInput, cumOutput,
       }
     })
@@ -84,11 +67,7 @@ function CumulativeTokensChart({ model }: { model: TimelineModel }): React.React
   const sy = (y: number): number => PAD.top + plotH - (y / yMax) * plotH
 
   const path = (key: 'cumInput' | 'cumOutput'): string =>
-<<<<<<< HEAD
     points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${sx(point.x).toFixed(1)} ${sy(point[key]).toFixed(1)}`).join(' ')
-=======
-    points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${sx(p.x).toFixed(1)} ${sy(p[key]).toFixed(1)}`).join(' ')
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   const area = (key: 'cumInput' | 'cumOutput'): string =>
     `${path(key)} L ${sx(points.at(-1)!.x).toFixed(1)} ${sy(0)} L ${sx(points[0].x).toFixed(1)} ${sy(0)} Z`
 
@@ -99,7 +78,6 @@ function CumulativeTokensChart({ model }: { model: TimelineModel }): React.React
     const rect = svgRef.current?.getBoundingClientRect()
     if (!rect) return
     const mx = ((event.clientX - rect.left) / rect.width) * W
-<<<<<<< HEAD
     // Binary search the nearest point by x; mousemove should be O(log n).
     let low = 0
     let high = points.length - 1
@@ -112,18 +90,6 @@ function CumulativeTokensChart({ model }: { model: TimelineModel }): React.React
       ? low - 1
       : low
     setHover(candidate)
-=======
-    let best = 0
-    let bestDist = Number.POSITIVE_INFINITY
-    points.forEach((p, i) => {
-      const d = Math.abs(sx(p.x) - mx)
-      if (d < bestDist) {
-        bestDist = d
-        best = i
-      }
-    })
-    setHover(best)
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   }
 
   return (
@@ -151,19 +117,11 @@ function CumulativeTokensChart({ model }: { model: TimelineModel }): React.React
           onMouseMove={onMove}
           onMouseLeave={() => setHover(undefined)}
         >
-<<<<<<< HEAD
           {ticks.map(value => (
             <g key={value}>
               <line className="dshr-grid" x1={PAD.left} x2={W - PAD.right} y1={sy(value)} y2={sy(value)} />
               <text className="dshr-axis-label" x={PAD.left - 8} y={sy(value) + 3} textAnchor="end">
                 {formatTokens(value)}
-=======
-          {ticks.map(v => (
-            <g key={v}>
-              <line className="dshr-grid" x1={PAD.left} x2={W - PAD.right} y1={sy(v)} y2={sy(v)} />
-              <text className="dshr-axis-label" x={PAD.left - 8} y={sy(v) + 3} textAnchor="end">
-                {formatTokens(v)}
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
               </text>
             </g>
           ))}
@@ -176,10 +134,6 @@ function CumulativeTokensChart({ model }: { model: TimelineModel }): React.React
           <path d={area('cumInput')} fill="var(--dshr-s-assistant)" opacity={0.1} />
           <path d={path('cumInput')} className="dshr-line" stroke="var(--dshr-s-assistant)" />
           <path d={path('cumOutput')} className="dshr-line" stroke="var(--dshr-s-tool)" />
-<<<<<<< HEAD
-=======
-          {/* end markers + end labels */}
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
           <circle cx={sx(points.at(-1)!.x)} cy={sy(points.at(-1)!.cumInput)} r={4}
             fill="var(--dshr-s-assistant)" stroke="var(--dshr-bg)" strokeWidth={2} />
           <circle cx={sx(points.at(-1)!.x)} cy={sy(points.at(-1)!.cumOutput)} r={4}
@@ -231,21 +185,13 @@ function ToolTimeBars({ model }: { model: TimelineModel }): React.ReactElement |
       byTool.set(call.name, entry)
     }
     return [...byTool.entries()]
-<<<<<<< HEAD
       .map(([name, value]) => ({ name, ...value }))
-=======
-      .map(([name, v]) => ({ name, ...v }))
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
       .sort((a, b) => b.ms - a.ms)
       .slice(0, 8)
   }, [model])
 
   if (rows.length === 0) return null
-<<<<<<< HEAD
   const max = Math.max(...rows.map(row => row.ms), 1)
-=======
-  const max = Math.max(...rows.map(r => r.ms), 1)
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 
   return (
     <div className="dshr-panel">
@@ -269,7 +215,6 @@ function ToolTimeBars({ model }: { model: TimelineModel }): React.ReactElement |
   )
 }
 
-<<<<<<< HEAD
 function PricingEditor({ pricing, onClose }: { pricing: PricingEntry[]; onClose: () => void }): React.ReactElement {
   const { t } = useI18n()
   const [draft, setDraft] = useState<Record<string, PricingRate>>(() =>
@@ -328,8 +273,6 @@ function PricingEditor({ pricing, onClose }: { pricing: PricingEntry[]; onClose:
   )
 }
 
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 export function OverviewView({
   model,
   report,
@@ -340,18 +283,12 @@ export function OverviewView({
   onOpenAudit: () => void
 }): React.ReactElement {
   const { t } = useI18n()
-<<<<<<< HEAD
   const pricing = usePricing()
   const [currency, setCurrency] = useState<'USD' | 'CNY'>('USD')
   const [editing, setEditing] = useState(false)
   const steps = model.turns.reduce((count, turn) => count + turn.steps.length, 0)
   const risk = report.counts.critical + report.counts.serious
   const cost = estimateCostDetailed(model.modelTotals, pricing)
-=======
-  const steps = model.turns.reduce((n, turn) => n + turn.steps.length, 0)
-  const alerts = report.counts.critical + report.counts.serious
-  const cost = estimateCost(model.totals, model.models)
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   const tiles: { value: string; label: string; alert?: boolean; onClick?: () => void }[] = [
     { value: formatDuration(model.durationMs), label: t('cmp.duration') },
     { value: String(model.turns.length), label: t('cmp.turns') },
@@ -359,7 +296,6 @@ export function OverviewView({
     { value: String(model.toolCalls.length), label: t('cmp.toolCalls') },
     { value: formatTokens(model.totals.billedInput), label: t('ov.inputTokens') },
     { value: formatTokens(model.totals.output), label: t('ov.outputTokens') },
-<<<<<<< HEAD
     {
       value: cost !== undefined ? formatMoney(cost.usd, currency) : '—',
       label: cost !== undefined ? t('ov.cost', { label: cost.label }) : t('ov.noCost'),
@@ -367,13 +303,6 @@ export function OverviewView({
     { value: String(risk), label: t('ov.risk'), alert: risk > 0, onClick: onOpenAudit },
   ]
 
-=======
-    ...(cost !== undefined
-      ? [{ value: formatUsd(cost.usd), label: t('ov.cost', { label: cost.label }) }]
-      : []),
-    { value: String(report.findings.length), label: t('ov.findings'), alert: alerts > 0, onClick: onOpenAudit },
-  ]
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   return (
     <div className="dshr-overview">
       <div className="dshr-tiles">
@@ -387,11 +316,7 @@ export function OverviewView({
           >
             <span className="dshr-tile-value">
               {tile.value}
-<<<<<<< HEAD
               {tile.alert ? <span className="dshr-tile-flag">⛔ {risk}</span> : null}
-=======
-              {tile.alert ? <span className="dshr-tile-flag">⛔ {alerts}</span> : null}
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
             </span>
             <span className="dshr-tile-label">{tile.label}</span>
           </button>
@@ -399,7 +324,6 @@ export function OverviewView({
       </div>
       <CumulativeTokensChart model={model} />
       <ToolTimeBars model={model} />
-<<<<<<< HEAD
       <div className="dshr-panel dshr-cost-panel">
         <div className="dshr-panel-head">
           <span className="dshr-panel-title">{t('ov.costPanel')}</span>
@@ -445,8 +369,6 @@ export function OverviewView({
         <p className="dshr-cost-note">{t('ov.costNote')}</p>
         {editing && <PricingEditor pricing={pricing} onClose={() => setEditing(false)} />}
       </div>
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
     </div>
   )
 }

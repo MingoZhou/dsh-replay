@@ -3,7 +3,6 @@
  * with a severity, grouped for the audit view. Rules are data, not code —
  * extend `DEFAULT_RULES` or pass your own list.
  *
-<<<<<<< HEAD
  * Design goals, in order:
  *  1. Signal, not activity. A clean session should produce zero findings;
  *     routine file writes and ordinary network reads are not "risks".
@@ -12,13 +11,10 @@
  *  3. Baseline is not a finding. Every session starts with a permission
  *     preset and sandbox mode; only a later *change* is interesting.
  *
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
  * Severity vocabulary mirrors a standard status palette:
  * 'critical' | 'serious' | 'warning' | 'info'.
  */
 import type { ParsedSession, SessionEvent } from './types.js'
-<<<<<<< HEAD
 import { containsSecret, redactText } from './redact.js'
 
 export type Severity = 'critical' | 'serious' | 'warning' | 'info'
@@ -36,14 +32,6 @@ export interface AuditFinding {
   ruleId: string
   severity: Severity
   category?: AuditCategory
-=======
-
-export type Severity = 'critical' | 'serious' | 'warning' | 'info'
-
-export interface AuditFinding {
-  ruleId: string
-  severity: Severity
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   seq: number
   time: number
   /** English title (stable fallback). */
@@ -56,10 +44,7 @@ export interface AuditFinding {
 
 export interface AuditRule {
   id: string
-<<<<<<< HEAD
   category?: AuditCategory
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   severity: Severity | ((event: SessionEvent) => Severity)
   /** Return a finding title when the event matches, undefined otherwise. */
   match: (event: SessionEvent) => {
@@ -67,25 +52,19 @@ export interface AuditRule {
     detail?: string
     messageKey?: string
     params?: Record<string, string>
-<<<<<<< HEAD
     category?: AuditCategory
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   } | undefined
 }
 
 export interface AuditReport {
   findings: AuditFinding[]
   counts: Record<Severity, number>
-<<<<<<< HEAD
   /** Number of raw events scanned. */
   scanned: number
   /** Number of rules evaluated. */
   rules: number
   /** Baseline/duplicate config events deliberately ignored. */
   suppressed: number
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 }
 
 function get(obj: unknown, key: string): unknown {
@@ -93,7 +72,6 @@ function get(obj: unknown, key: string): unknown {
 }
 
 function str(value: unknown): string {
-<<<<<<< HEAD
   if (typeof value === 'string') return value
   try {
     return JSON.stringify(value) ?? ''
@@ -212,32 +190,10 @@ function findDanger(event: SessionEvent): ShellPattern | undefined {
   const args = argsOf(event)
   return DANGEROUS_SHELL.find(pattern => pattern.re.test(args))
 }
-=======
-  return typeof value === 'string' ? value : JSON.stringify(value) ?? ''
-}
-
-const SHELL_TOOLS = /^(bash|shell|exec|run_command|terminal|subprocess)/iu
-const WRITE_TOOLS = /^(write|edit|create_file|str_replace|apply_patch|notebook_edit|fs_write|mv|rm|delete)/iu
-const NETWORK_TOOLS = /^(fetch|web_fetch|http|curl|download|web_search|browser)/iu
-
-const DANGEROUS_SHELL = [
-  { re: /\brm\s+(-[a-z]*[rf][a-z]*\s+)+/iu, why: 'recursive/forced delete', key: 'rm-rf' },
-  { re: /\bsudo\b/u, why: 'privilege escalation', key: 'sudo' },
-  { re: /\bchmod\s+([0-7]{3,4}|\+x)/u, why: 'permission change', key: 'chmod' },
-  { re: /\b(curl|wget)\b[^|;&]*\|\s*(ba)?sh\b/iu, why: 'pipe remote script to shell', key: 'curl-pipe' },
-  { re: /\bgit\s+push\s+.*--force/iu, why: 'force push', key: 'force-push' },
-  { re: /\b(dd|mkfs|fdisk)\b/u, why: 'raw disk operation', key: 'disk' },
-  { re: /(\bssh\b|\bscp\b|\brsync\b.*@)/u, why: 'remote host access', key: 'remote' },
-  { re: /\b(export|echo)\b.*\b(API_?KEY|TOKEN|SECRET|PASSWORD)\b/iu, why: 'credential material in command', key: 'creds' },
-]
-
-const SENSITIVE_PATH = /(\.env\b|\.ssh\/|id_rsa|\.aws\/|credentials|\.npmrc|\.netrc|secrets?\.|\.pem\b)/iu
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 
 export const DEFAULT_RULES: AuditRule[] = [
   {
     id: 'shell-exec',
-<<<<<<< HEAD
     category: 'shell',
     severity: event => findDanger(event)?.severity ?? 'warning',
     match: event => {
@@ -252,29 +208,11 @@ export const DEFAULT_RULES: AuditRule[] = [
         detail: clipped(args),
         messageKey: 'f.shell.dangerous',
         params: { whyKey: hit.key, why: hit.why, name },
-=======
-    severity: event => {
-      const args = str(get(event.data, 'arguments'))
-      return DANGEROUS_SHELL.some(p => p.re.test(args)) ? 'critical' : 'warning'
-    },
-    match: event => {
-      if (event.type !== 'tool/call') return undefined
-      const name = str(get(event.data, 'name'))
-      if (!SHELL_TOOLS.test(name)) return undefined
-      const args = str(get(event.data, 'arguments'))
-      const hit = DANGEROUS_SHELL.find(p => p.re.test(args))
-      return {
-        title: hit ? `shell: ${hit.why}` : `shell command via ${name}`,
-        detail: args.slice(0, 400),
-        messageKey: hit ? 'f.shell.dangerous' : 'f.shell.plain',
-        params: (hit ? { whyKey: hit.key, why: hit.why } : { name }) as Record<string, string>,
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
       }
     },
   },
   {
     id: 'file-write',
-<<<<<<< HEAD
     category: 'file',
     severity: event => {
       const args = argsOf(event)
@@ -300,27 +238,11 @@ export const DEFAULT_RULES: AuditRule[] = [
         detail: clipped(args),
         messageKey: sensitive ? 'f.file.sensitive' : secret ? 'f.file.secret' : 'f.file.destructive',
         params: { name, ...(path !== args ? { path } : {}) },
-=======
-    severity: event =>
-      SENSITIVE_PATH.test(str(get(event.data, 'arguments'))) ? 'critical' : 'info',
-    match: event => {
-      if (event.type !== 'tool/call') return undefined
-      const name = str(get(event.data, 'name'))
-      if (!WRITE_TOOLS.test(name)) return undefined
-      const args = str(get(event.data, 'arguments'))
-      const sensitive = SENSITIVE_PATH.test(args)
-      return {
-        title: sensitive ? `file write touches sensitive path` : `file mutation via ${name}`,
-        detail: args.slice(0, 400),
-        messageKey: sensitive ? 'f.file.sensitive' : 'f.file.write',
-        params: { name },
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
       }
     },
   },
   {
     id: 'sensitive-read',
-<<<<<<< HEAD
     category: 'file',
     severity: 'serious',
     match: event => {
@@ -336,26 +258,11 @@ export const DEFAULT_RULES: AuditRule[] = [
         detail: clipped(args),
         messageKey: 'f.read.sensitive',
         params: { name, ...(path !== args ? { path } : {}) },
-=======
-    severity: 'serious',
-    match: event => {
-      if (event.type !== 'tool/call') return undefined
-      const args = str(get(event.data, 'arguments'))
-      const name = str(get(event.data, 'name'))
-      if (WRITE_TOOLS.test(name) || SHELL_TOOLS.test(name)) return undefined
-      if (!SENSITIVE_PATH.test(args)) return undefined
-      return {
-        title: `access to sensitive path via ${name}`,
-        detail: args.slice(0, 400),
-        messageKey: 'f.read.sensitive',
-        params: { name },
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
       }
     },
   },
   {
     id: 'network',
-<<<<<<< HEAD
     category: 'network',
     severity: event => {
       const args = argsOf(event)
@@ -370,23 +277,12 @@ export const DEFAULT_RULES: AuditRule[] = [
       return {
         title: `network request may carry sensitive data via ${name}`,
         detail: clipped(args),
-=======
-    severity: 'info',
-    match: event => {
-      if (event.type !== 'tool/call') return undefined
-      const name = str(get(event.data, 'name'))
-      if (!NETWORK_TOOLS.test(name)) return undefined
-      return {
-        title: `network access via ${name}`,
-        detail: str(get(event.data, 'arguments')).slice(0, 400),
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
         messageKey: 'f.network',
         params: { name },
       }
     },
   },
   {
-<<<<<<< HEAD
     id: 'secret-output',
     category: 'secret',
     severity: 'critical',
@@ -405,25 +301,16 @@ export const DEFAULT_RULES: AuditRule[] = [
   {
     id: 'approval-denied',
     category: 'approval',
-=======
-    id: 'approval-denied',
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
     severity: 'warning',
     match: event => {
       if (event.type !== 'approval/decided') return undefined
       const outcome = str(get(event.data, 'outcome') ?? get(event.data, 'decision'))
-<<<<<<< HEAD
       if (!/deny|denied|reject|refus/iu.test(outcome)) return undefined
       return { title: 'user denied an approval', detail: clipped(outcome), messageKey: 'f.approval.denied' }
-=======
-      if (!/den|reject|refus/iu.test(outcome)) return undefined
-      return { title: 'user denied an approval', detail: outcome, messageKey: 'f.approval.denied' }
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
     },
   },
   {
     id: 'sandbox-change',
-<<<<<<< HEAD
     category: 'config',
     severity: event => {
       const mode = str(get(event.data, 'mode'))
@@ -435,37 +322,11 @@ export const DEFAULT_RULES: AuditRule[] = [
             title: `sandbox mode changed to ${str(get(event.data, 'mode')) || 'unknown'}`,
             detail: clipped(JSON.stringify(event.data)),
             messageKey: 'f.sandbox.change',
-=======
-    severity: 'serious',
-    match: event =>
-      event.type === 'sandbox/mode'
-        ? { title: 'sandbox mode changed', detail: JSON.stringify(event.data), messageKey: 'f.sandbox.change' }
-        : undefined,
-  },
-  {
-    id: 'permission-change',
-    severity: 'serious',
-    match: event =>
-      event.type === 'permission/preset'
-        ? { title: 'permission preset changed', detail: JSON.stringify(event.data), messageKey: 'f.permission.change' }
-        : undefined,
-  },
-  {
-    id: 'subagent',
-    severity: 'info',
-    match: event =>
-      event.type === 'subagent/descriptor'
-        ? {
-            title: `subagent spawned (${str(get(event.data, 'mode'))})`,
-            detail: str(get(event.data, 'persona') ?? get(event.data, 'label') ?? ''),
-            messageKey: 'f.subagent',
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
             params: { mode: str(get(event.data, 'mode')) },
           }
         : undefined,
   },
   {
-<<<<<<< HEAD
     id: 'permission-change',
     category: 'config',
     severity: event => {
@@ -485,9 +346,6 @@ export const DEFAULT_RULES: AuditRule[] = [
   {
     id: 'tool-error',
     category: 'error',
-=======
-    id: 'tool-error',
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
     severity: 'warning',
     match: event => {
       if (event.type !== 'tool/result') return undefined
@@ -495,33 +353,20 @@ export const DEFAULT_RULES: AuditRule[] = [
       if (error === undefined) return undefined
       return {
         title: `tool failed: ${str(get(error, 'name'))}`,
-<<<<<<< HEAD
         detail: clipped(str(get(error, 'code'))),
         messageKey: 'f.tool.error',
         params: { name: str(get(error, 'name')), code: str(get(error, 'code')) },
-=======
-        detail: str(get(error, 'code')),
-        messageKey: 'f.tool.error',
-        params: { name: str(get(error, 'name')) },
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
       }
     },
   },
   {
     id: 'turn-error',
-<<<<<<< HEAD
     category: 'error',
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
     severity: 'warning',
     match: event => {
       if (event.type !== 'turn/end') return undefined
       const kind = str(get(get(event.data, 'reason'), 'kind'))
-<<<<<<< HEAD
       if (kind === '' || kind === 'completed' || kind === 'aborted') return undefined
-=======
-      if (kind === 'completed' || kind === '') return undefined
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
       return { title: `turn ended abnormally: ${kind}`, messageKey: 'f.turn.error', params: { kind } }
     },
   },
@@ -529,16 +374,12 @@ export const DEFAULT_RULES: AuditRule[] = [
 
 const SEVERITY_ORDER: Severity[] = ['critical', 'serious', 'warning', 'info']
 
-<<<<<<< HEAD
 const CONFIG_RULES = new Set(['sandbox-change', 'permission-change'])
 
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 export function auditSession(
   session: ParsedSession,
   rules: AuditRule[] = DEFAULT_RULES,
 ): AuditReport {
-<<<<<<< HEAD
   // The first permission/sandbox event is the session baseline, not a change.
   // A later event only matters when its value differs from the previous one.
   const lastConfig = new Map<string, string>()
@@ -581,15 +422,6 @@ export function auditSession(
         time: event.time,
         ...hit,
       })
-=======
-  const findings: AuditFinding[] = []
-  for (const event of session.events) {
-    for (const rule of rules) {
-      const hit = rule.match(event)
-      if (hit === undefined) continue
-      const severity = typeof rule.severity === 'function' ? rule.severity(event) : rule.severity
-      findings.push({ ruleId: rule.id, severity, seq: event.seq, time: event.time, ...hit })
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
     }
   }
   findings.sort(
@@ -598,9 +430,5 @@ export function auditSession(
   )
   const counts: Record<Severity, number> = { critical: 0, serious: 0, warning: 0, info: 0 }
   for (const finding of findings) counts[finding.severity]++
-<<<<<<< HEAD
   return { findings, counts, scanned: session.events.length, rules: rules.length, suppressed }
-=======
-  return { findings, counts }
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 }

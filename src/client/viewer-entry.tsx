@@ -24,14 +24,10 @@ function ViewerShell(): React.ReactElement {
     globalThis.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false,
   )
   return (
-<<<<<<< HEAD
     <div
       data-theme={dark ? 'dark' : 'light'}
       style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
     >
-=======
-    <div data-theme={dark ? 'dark' : 'light'} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
       <div
         style={{
           display: 'flex', alignItems: 'center', gap: 10, padding: '8px 14px', fontSize: 13,
@@ -40,11 +36,7 @@ function ViewerShell(): React.ReactElement {
         }}
       >
         <strong>dsh-replay</strong>
-<<<<<<< HEAD
         <span style={{ opacity: 0.6 }}>exported session review · read-only</span>
-=======
-        <span style={{ opacity: 0.6 }}>exported session replay</span>
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
         <span style={{ flex: 1 }} />
         <a
           href="https://github.com/MingoZhou/dsh-replay"
@@ -55,11 +47,7 @@ function ViewerShell(): React.ReactElement {
           GitHub
         </a>
         <button
-<<<<<<< HEAD
           onClick={() => setDark(value => !value)}
-=======
-          onClick={() => setDark(d => !d)}
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
           style={{
             font: 'inherit', cursor: 'pointer', border: '1px solid ' + (dark ? '#2c2c2a' : '#e1e0d9'),
             borderRadius: 6, padding: '2px 9px', background: 'transparent', color: 'inherit',
@@ -69,7 +57,6 @@ function ViewerShell(): React.ReactElement {
         </button>
       </div>
       <div style={{ flex: 1, minHeight: 0 }}>
-<<<<<<< HEAD
         <ReplayApp api={api} sessionId={first} standalone />
       </div>
       <div
@@ -89,9 +76,6 @@ function ViewerShell(): React.ReactElement {
         >
           Install · Star ★
         </a>
-=======
-        <ReplayApp api={api} sessionId={first} />
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
       </div>
     </div>
   )

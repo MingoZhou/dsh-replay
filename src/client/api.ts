@@ -1,17 +1,12 @@
 /** Data access for the UI — one HTTP implementation, one in-memory demo implementation. */
-<<<<<<< HEAD
 import { auditSession } from '../core/audit.js'
 import { fromInspection, parseSessionJsonl } from '../core/decode.js'
 import { buildTimeline } from '../core/timeline.js'
-=======
-import { fromInspection, parseSessionJsonl } from '../core/decode.js'
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 import type { ParsedSession, SessionHeader, StorageRecord } from '../core/types.js'
 
 export interface SessionEntry {
   header: SessionHeader
   title?: string
-<<<<<<< HEAD
   live?: boolean
 }
 
@@ -52,17 +47,12 @@ export interface SessionSummaryEntry {
   live?: boolean
   summary?: SessionSummaryData
   error?: string
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 }
 
 export interface ReplayApi {
   listSessions: () => Promise<SessionEntry[]>
   getSession: (id: string) => Promise<ParsedSession>
-<<<<<<< HEAD
   getSummaries?: (limit?: number) => Promise<SessionSummaryEntry[]>
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   /** Source of the standalone viewer bundle, for HTML export (optional). */
   getViewerSource?: () => Promise<string>
 }
@@ -89,7 +79,6 @@ export class HttpReplayApi implements ReplayApi {
     return fromInspection(body.header, body.events)
   }
 
-<<<<<<< HEAD
   async getSummaries(limit = 30): Promise<SessionSummaryEntry[]> {
     const body = (await this.fetchJson(`/summary?limit=${limit}`)) as {
       sessions: SessionSummaryEntry[]
@@ -97,8 +86,6 @@ export class HttpReplayApi implements ReplayApi {
     return body.sessions
   }
 
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   async getViewerSource(): Promise<string> {
     const response = await fetch(`${this.base}/viewer.js`)
     if (!response.ok) throw new Error(`viewer bundle: HTTP ${response.status}`)
@@ -122,13 +109,9 @@ export class StaticReplayApi implements ReplayApi {
   }
 
   /** Build directly from already-decoded sessions (exported HTML, tooling). */
-<<<<<<< HEAD
   static fromParsed(
     list: { header: ParsedSession['header']; events: ParsedSession['events']; title?: string }[],
   ): StaticReplayApi {
-=======
-  static fromParsed(list: { header: ParsedSession['header']; events: ParsedSession['events']; title?: string }[]): StaticReplayApi {
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
     const api = new StaticReplayApi([])
     for (const { header, events, title } of list) {
       api.sessions.set(header.id, { header, events, malformed: [] })
@@ -145,15 +128,9 @@ export class StaticReplayApi implements ReplayApi {
   }
 
   async listSessions(): Promise<SessionEntry[]> {
-<<<<<<< HEAD
     return [...this.sessions.values()].map(session => ({
       header: session.header,
       title: this.titles.get(session.header.id),
-=======
-    return [...this.sessions.values()].map(s => ({
-      header: s.header,
-      title: this.titles.get(s.header.id),
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
     }))
   }
 
@@ -162,7 +139,6 @@ export class StaticReplayApi implements ReplayApi {
     if (session === undefined) throw new Error(`unknown session ${id}`)
     return session
   }
-<<<<<<< HEAD
 
   async getSummaries(limit = 30): Promise<SessionSummaryEntry[]> {
     const entries = await this.listSessions()
@@ -193,8 +169,6 @@ export class StaticReplayApi implements ReplayApi {
       }
     })
   }
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 }
 
 export function formatDuration(ms: number): string {
@@ -204,13 +178,9 @@ export function formatDuration(ms: number): string {
   if (s < 60) return `${s.toFixed(s < 10 ? 1 : 0)}s`
   const m = Math.floor(s / 60)
   if (m < 60) return `${m}m ${Math.round(s % 60)}s`
-<<<<<<< HEAD
   const h = Math.floor(m / 60)
   if (h < 48) return `${h}h ${m % 60}m`
   return `${Math.floor(h / 24)}d ${h % 24}h`
-=======
-  return `${Math.floor(m / 60)}h ${m % 60}m`
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 }
 
 export function formatTokens(n: number): string {
@@ -220,7 +190,6 @@ export function formatTokens(n: number): string {
   return String(n)
 }
 
-<<<<<<< HEAD
 /** Clock offset from the session start: mm:ss, or h:mm:ss for long sessions. */
 export function formatClock(time: number, startTime: number): string {
   const ms = Math.max(0, time - startTime)
@@ -247,14 +216,6 @@ export function formatRelativeTime(time: number, now = Date.now(), lang: 'en' | 
   if (abs < 30 * day) return formatter.format(Math.round(diff / day), 'day')
   if (abs < 365 * day) return formatter.format(Math.round(diff / (30 * day)), 'month')
   return formatter.format(Math.round(diff / (365 * day)), 'year')
-=======
-export function formatClock(time: number, startTime: number): string {
-  const ms = time - startTime
-  const s = Math.floor(ms / 1000)
-  const mm = String(Math.floor(s / 60)).padStart(2, '0')
-  const ss = String(s % 60).padStart(2, '0')
-  return `${mm}:${ss}`
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 }
 
 export function shortId(id: string): string {

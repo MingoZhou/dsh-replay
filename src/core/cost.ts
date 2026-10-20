@@ -1,14 +1,8 @@
 /**
  * Cost estimation from token totals. Prices are USD per 1M tokens and are
-<<<<<<< HEAD
  * ESTIMATES — provider list prices change; the UI lets you override them.
  * Cache-write falls back to the input rate when a provider doesn't price it
  * separately.
-=======
- * ESTIMATES — provider list prices change; override the table if you need
- * exact numbers. Cache-write falls back to the input rate when a provider
- * doesn't price it separately.
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
  */
 import type { TokenTotals } from './timeline.js'
 
@@ -27,17 +21,13 @@ export interface PricingEntry {
   match: RegExp
   rate: PricingRate
   label: string
-<<<<<<< HEAD
   /** ISO date the default rates were last checked. */
   updatedAt?: string
   source?: string
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 }
 
 /** Editable defaults — first match wins, most specific first. */
 export const DEFAULT_PRICING: PricingEntry[] = [
-<<<<<<< HEAD
   {
     match: /deepseek.*pro/iu,
     rate: { input: 1.1, cacheRead: 0.27, output: 4.4 },
@@ -73,13 +63,6 @@ export const DEFAULT_PRICING: PricingEntry[] = [
     updatedAt: '2026-08-18',
     source: 'provider list price (estimate)',
   },
-=======
-  { match: /deepseek.*pro/iu, rate: { input: 1.1, cacheRead: 0.27, output: 4.4 }, label: 'DeepSeek Pro' },
-  { match: /deepseek/iu, rate: { input: 0.27, cacheRead: 0.07, output: 1.1 }, label: 'DeepSeek' },
-  { match: /claude|anthropic/iu, rate: { input: 3, cacheRead: 0.3, cacheWrite: 3.75, output: 15 }, label: 'Claude' },
-  { match: /gpt|^o\d|openai|codex/iu, rate: { input: 2.5, cacheRead: 1.25, output: 10 }, label: 'OpenAI' },
-  { match: /gemini/iu, rate: { input: 1.25, cacheRead: 0.31, output: 10 }, label: 'Gemini' },
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 ]
 
 export interface CostEstimate {
@@ -87,7 +70,6 @@ export interface CostEstimate {
   label: string
 }
 
-<<<<<<< HEAD
 export interface CostPart extends CostEstimate {
   model: string
   totals: TokenTotals
@@ -107,8 +89,6 @@ function costOf(totals: TokenTotals, rate: PricingRate): number {
   )
 }
 
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 export function estimateCost(
   totals: TokenTotals,
   models: string[],
@@ -116,7 +96,6 @@ export function estimateCost(
 ): CostEstimate | undefined {
   const entry = pricing.find(p => models.some(m => p.match.test(m)))
   if (entry === undefined) return undefined
-<<<<<<< HEAD
   return { usd: costOf(totals, entry.rate), label: entry.label }
 }
 
@@ -139,16 +118,6 @@ export function estimateCostDetailed(
   const usd = parts.reduce((sum, part) => sum + part.usd, 0)
   const labels = [...new Set(parts.map(part => part.label))]
   return { usd, label: labels.length === 1 ? labels[0] : `Mixed (${labels.length} models)`, parts }
-=======
-  const { rate } = entry
-  const usd =
-    (totals.input * rate.input +
-      totals.cacheRead * rate.cacheRead +
-      totals.cacheWrite * (rate.cacheWrite ?? rate.input) +
-      totals.output * rate.output) /
-    1_000_000
-  return { usd, label: entry.label }
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 }
 
 export function formatUsd(usd: number): string {
@@ -156,7 +125,6 @@ export function formatUsd(usd: number): string {
   if (usd >= 0.01) return `$${usd.toFixed(3)}`
   return `$${usd.toFixed(4)}`
 }
-<<<<<<< HEAD
 
 /** Approximate CNY amount at a caller-supplied exchange rate. */
 export function formatCny(usd: number, rate = 7.2): string {
@@ -169,5 +137,3 @@ export function formatCny(usd: number, rate = 7.2): string {
 export function formatMoney(usd: number, currency: 'USD' | 'CNY', rate = 7.2): string {
   return currency === 'CNY' ? formatCny(usd, rate) : formatUsd(usd)
 }
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d

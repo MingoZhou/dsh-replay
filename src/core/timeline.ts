@@ -20,11 +20,8 @@ export interface ToolCallInfo {
   /** Raw argument JSON string exactly as the model produced it. */
   argumentsRaw: string
   argumentsPretty?: string
-<<<<<<< HEAD
   /** Short, human-readable summary (command/path/url/query) for the rail. */
   summary?: string
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   resultText?: string
   error?: { name: string; code: string }
   callSeq: number
@@ -90,11 +87,8 @@ export interface TimelineModel {
   /** Flat, seq-ordered list of everything renderable. */
   items: TimelineItem[]
   totals: TokenTotals
-<<<<<<< HEAD
   /** Token totals split by model, for cache-aware multi-model cost. */
   modelTotals: Record<string, TokenTotals>
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   /** Per assistant-step usage samples in order, for the token strip. */
   usageSamples: { seq: number; turn: number; step: number; usage: TokenUsage }[]
   toolCalls: ToolCallInfo[]
@@ -112,16 +106,11 @@ export interface TimelineModel {
 function contentText(message: MessageLike | undefined): string {
   if (!message?.content) return ''
   return message.content
-<<<<<<< HEAD
     .filter((b: ContentBlock) => typeof b.text === 'string' && b.type !== 'reasoning')
-=======
-    .filter((b: ContentBlock) => typeof b.text === 'string')
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
     .map((b: ContentBlock) => b.text)
     .join('')
 }
 
-<<<<<<< HEAD
 function contentReasoning(message: MessageLike | undefined): string {
   if (!message?.content) return ''
   return message.content
@@ -155,8 +144,6 @@ export function summarizeToolArguments(name: string, raw: string): string {
   return name
 }
 
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 function truncate(text: string, max = 96): string {
   const oneLine = text.replaceAll(/\s+/gu, ' ').trim()
   return oneLine.length > max ? `${oneLine.slice(0, max - 1)}…` : oneLine
@@ -243,19 +230,13 @@ export function buildTimeline(session: ParsedSession): TimelineModel {
   const toolCallsBySeq = new Map<string, ToolCallInfo>()
   const toolCalls: ToolCallInfo[] = []
   const usageByStep = new Map<string, TokenUsage>()
-<<<<<<< HEAD
   const usageModelByStep = new Map<string, string>()
   const modelTotals: Record<string, TokenTotals> = {}
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   const models = new Set<string>()
   const shadowed = shadowedSeqs(events)
   let seedBoundarySeq: number | undefined
   let activeTurn: number | undefined
-<<<<<<< HEAD
   let activeModel: string | undefined
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   let sessionTitle: string | undefined
 
   const ensureTurn = (turn: number, event: SessionEvent): TurnModel => {
@@ -323,7 +304,6 @@ export function buildTimeline(session: ParsedSession): TimelineModel {
         const message = get(d, 'message') as MessageLike
         const usage = get(d, 'usage') as TokenUsage | undefined
         const text = contentText(message)
-<<<<<<< HEAD
         const reasoningText = contentReasoning(message)
         const source = message?.source as Record<string, unknown> | undefined
         if (typeof source?.['model'] === 'string') {
@@ -334,21 +314,11 @@ export function buildTimeline(session: ParsedSession): TimelineModel {
           const key = `${String(turn)}/${String(step)}`
           usageByStep.set(key, usage)
           if (activeModel !== undefined) usageModelByStep.set(key, activeModel)
-=======
-        const source = message?.source as Record<string, unknown> | undefined
-        if (typeof source?.['model'] === 'string') models.add(source['model'])
-        if (usage) {
-          usageByStep.set(`${String(turn)}/${String(step)}`, usage)
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
         }
         push({
           kind: 'assistant', seq: event.seq, time: event.time,
           turn: turn as number, step: step as number, type: event.type,
-<<<<<<< HEAD
           label: truncate(text) || '(assistant message)', text, reasoningText, usage, event,
-=======
-          label: truncate(text) || '(assistant message)', text, usage, event,
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
         })
         break
       }
@@ -356,20 +326,15 @@ export function buildTimeline(session: ParsedSession): TimelineModel {
         const chunk = get(d, 'chunk')
         if (get(chunk, 'type') === 'usage') {
           const usage = get(chunk, 'usage') as TokenUsage
-<<<<<<< HEAD
           const key = `${String(turn)}/${String(step)}`
           usageByStep.set(key, usage)
           if (activeModel !== undefined && !usageModelByStep.has(key)) {
             usageModelByStep.set(key, activeModel)
           }
-=======
-          usageByStep.set(`${String(turn)}/${String(step)}`, usage)
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
         }
         break
       }
       case 'tool/call': {
-<<<<<<< HEAD
         const raw = String(get(d, 'arguments') ?? '')
         const name = String(get(d, 'name') ?? '')
         const info: ToolCallInfo = {
@@ -378,13 +343,6 @@ export function buildTimeline(session: ParsedSession): TimelineModel {
           argumentsRaw: raw,
           argumentsPretty: tryPretty(raw),
           summary: summarizeToolArguments(name, raw),
-=======
-        const info: ToolCallInfo = {
-          callId: String(get(d, 'callId') ?? ''),
-          name: String(get(d, 'name') ?? ''),
-          argumentsRaw: String(get(d, 'arguments') ?? ''),
-          argumentsPretty: tryPretty(String(get(d, 'arguments') ?? '')),
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
           callSeq: event.seq,
           callTime: event.time,
         }
@@ -393,12 +351,8 @@ export function buildTimeline(session: ParsedSession): TimelineModel {
         push({
           kind: 'tool', seq: event.seq, time: event.time,
           turn: turn as number, step: step as number, type: event.type,
-<<<<<<< HEAD
           label: info.summary === name ? name : `${name} · ${info.summary}`,
           toolCall: info, event,
-=======
-          label: `${info.name}(${truncate(info.argumentsRaw, 48)})`, toolCall: info, event,
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
         })
         break
       }
@@ -409,16 +363,10 @@ export function buildTimeline(session: ParsedSession): TimelineModel {
         const info = toolCallsBySeq.get(callId)
         const block = message?.content?.[0]
         const resultText =
-<<<<<<< HEAD
           contentText(message) ||
           (typeof get(block, 'text') === 'string'
             ? (get(block, 'text') as string)
             : contentText({ content: get(block, 'content') as ContentBlock[] | undefined }))
-=======
-          typeof get(block, 'text') === 'string'
-            ? (get(block, 'text') as string)
-            : contentText({ content: get(block, 'content') as ContentBlock[] | undefined })
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
         const error = get(d, 'error') as { name: string; code: string } | undefined
         if (info) {
           info.resultSeq = event.seq
@@ -436,7 +384,6 @@ export function buildTimeline(session: ParsedSession): TimelineModel {
           label: 'seed boundary (fork/resume point)', event,
         })
         break
-<<<<<<< HEAD
       case 'system/message': {
         const message = get(d, 'message') as MessageLike
         const text = contentText(message)
@@ -466,11 +413,6 @@ export function buildTimeline(session: ParsedSession): TimelineModel {
           activeModel = model
           models.add(model)
         }
-=======
-      case 'request/context': {
-        const model = get(d, 'model')
-        if (typeof model === 'string') models.add(model)
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
         break
       }
       case 'session/title': {
@@ -495,23 +437,17 @@ export function buildTimeline(session: ParsedSession): TimelineModel {
 
   // Fold usage samples (already last-wins per turn/step via the map).
   const totals: TokenTotals = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, reasoning: 0, billedInput: 0 }
-<<<<<<< HEAD
   const emptyTotals = (): TokenTotals => ({
     input: 0, output: 0, cacheRead: 0, cacheWrite: 0, reasoning: 0, billedInput: 0,
   })
   for (const [key, usage] of usageByStep) {
     const [turnStr, stepStr] = key.split('/')
     const billed = usage.inputTokens + (usage.cacheReadTokens ?? 0) + (usage.cacheWriteTokens ?? 0)
-=======
-  for (const [key, usage] of usageByStep) {
-    const [turnStr, stepStr] = key.split('/')
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
     totals.input += usage.inputTokens
     totals.output += usage.outputTokens
     totals.cacheRead += usage.cacheReadTokens ?? 0
     totals.cacheWrite += usage.cacheWriteTokens ?? 0
     totals.reasoning += usage.reasoningTokens ?? 0
-<<<<<<< HEAD
     const modelName = usageModelByStep.get(key) ?? activeModel ?? 'unknown'
     const modelTotal = modelTotals[modelName] ?? emptyTotals()
     modelTotal.input += usage.inputTokens
@@ -521,8 +457,6 @@ export function buildTimeline(session: ParsedSession): TimelineModel {
     modelTotal.reasoning += usage.reasoningTokens ?? 0
     modelTotal.billedInput += billed
     modelTotals[modelName] = modelTotal
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
     const turnModel = turns.get(Number(turnStr))
     const stepModel = turnModel?.steps.find(s => s.step === Number(stepStr))
     if (stepModel) stepModel.usage = usage
@@ -543,10 +477,7 @@ export function buildTimeline(session: ParsedSession): TimelineModel {
     turns: orderedTurns,
     items,
     totals,
-<<<<<<< HEAD
     modelTotals,
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
     usageSamples,
     toolCalls,
     durationMs: endTime - startTime,

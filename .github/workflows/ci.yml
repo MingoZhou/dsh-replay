@@ -5,7 +5,6 @@ on:
   pull_request:
 jobs:
   test:
-<<<<<<< HEAD
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
     strategy:
@@ -13,25 +12,12 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         node: [22]
-=======
-    runs-on: ubuntu-latest
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-<<<<<<< HEAD
           node-version: ${{ matrix.node }}
-=======
-          node-version: 22
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
           cache: npm
       - run: npm ci
       - run: npm run build
       - run: npm test
-<<<<<<< HEAD
-      - name: Inspect package contents
-        if: matrix.os == 'ubuntu-latest'
-        run: npm pack --dry-run
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d

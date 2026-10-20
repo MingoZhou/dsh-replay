@@ -27,6 +27,18 @@ Enable **Discussions** and create:
 Pin the “Read this before asking: replay is read-only” discussion if you want a
 single canonical answer.
 
+## Before tagging: no conflict markers
+
+A merge once landed 29 files with unresolved markers. Verify before every
+release:
+
+```sh
+git grep -n -E '^(<<<<<<<|=======|>>>>>>>)'
+```
+
+The command must print nothing. `npm ci` runs `prepare` → `scripts/build.mjs`,
+so a conflict marker there fails the Pages workflow before the build step.
+
 ## Releases and npm
 
 0.4.2 is prepared in `package.json` and `CHANGELOG.md`. From a clean checkout:
@@ -35,13 +47,17 @@ single canonical answer.
 npm ci
 npm run build
 npm test
-npm pack --dry-run          # inspect the tarball; lib/viewer.js is the big file
+npm pack                     # inspect the tarball; lib/viewer.js is the big file
 npm publish --access public
 git tag v0.4.2 && git push --tags
 ```
 
 Then create a GitHub Release from `v0.4.2` with the 0.4.2 section of
 `CHANGELOG.md`. Do not claim a release date before publishing.
+
+Do not upload a full repository RAR to the Release. GitHub already attaches
+source `.zip`/`.tar.gz`; the npm tarball is the installable artifact. A 64 MB
+`dsh-replay.rar` mostly contains `node_modules` and should be deleted.
 
 ## Issue labels
 

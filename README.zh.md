@@ -42,8 +42,9 @@
 
 > Desktop 的 profile 由 Electron 应用独占管理，`dsh plugin --profile desktop …` 会被拒绝（`profile "desktop" is managed exclusively by the Electron application`）。这不是插件坏了，请用插件页安装。
 
-![img.png](img.png)
-<!-- Plugins 页面截图：当前运行的 Desktop 窗口在沙箱里无法截取（最小化 + 权限较高）。拿到截图后放在这里。 -->
+<img src="https://raw.githubusercontent.com/MingoZhou/dsh-replay/main/assets/plugins-installed.png" width="720" alt="DeepSeek Harness 插件页中的 dsh-replay" />
+
+<sub>插件 → 已安装插件。这是 0.4.1 的条目；0.4.2 会显示新的描述。</sub>
 
 ### Web UI / 源码模式
 

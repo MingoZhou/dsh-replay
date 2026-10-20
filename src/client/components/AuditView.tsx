@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import React, { useMemo, useState } from 'react'
-=======
-import React from 'react'
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 import type { AuditReport, Severity } from '../../core/audit.js'
 import type { TimelineModel } from '../../core/timeline.js'
 import { formatClock } from '../api.js'
@@ -16,7 +12,6 @@ const SEV_META: Record<Severity, { color: string; icon: string }> = {
   info: { color: 'var(--dshr-good)', icon: 'ℹ' },
 }
 
-<<<<<<< HEAD
 const SEVERITIES: Severity[] = ['critical', 'serious', 'warning', 'info']
 
 function downloadText(text: string, filename: string): void {
@@ -29,21 +24,15 @@ function downloadText(text: string, filename: string): void {
   setTimeout(() => URL.revokeObjectURL(url), 5000)
 }
 
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 export function AuditView({
   report,
   model,
   onJump,
-<<<<<<< HEAD
   sessionId,
-=======
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 }: {
   report: AuditReport
   model: TimelineModel
   onJump: (seq: number) => void
-<<<<<<< HEAD
   sessionId?: string
 }): React.ReactElement {
   const { t } = useI18n()
@@ -101,21 +90,11 @@ export function AuditView({
             onClick={() => setSeverity(current => (current === sev ? undefined : sev))}
             title={t('audit.riskOnly')}
           >
-=======
-}): React.ReactElement {
-  const { t } = useI18n()
-  return (
-    <div className="dshr-audit">
-      <div className="dshr-audit-summary">
-        {(Object.keys(SEV_META) as Severity[]).map(sev => (
-          <div key={sev} className="dshr-audit-tile">
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
             <div className="dshr-count">{report.counts[sev]}</div>
             <div className="dshr-cap">
               <span className="dshr-sev-dot" style={{ background: SEV_META[sev].color }} />
               {SEV_META[sev].icon} {t(`sev.${sev}`)}
             </div>
-<<<<<<< HEAD
           </button>
         ))}
       </div>
@@ -133,21 +112,10 @@ export function AuditView({
             className="dshr-finding"
             onClick={() => onJump(finding.seq)}
           >
-=======
-          </div>
-        ))}
-      </div>
-      {report.findings.length === 0 ? (
-        <MascotState mood="happy" text={t('audit.empty')} />
-      ) : (
-        report.findings.map((finding, i) => (
-          <button key={i} className="dshr-finding" onClick={() => onJump(finding.seq)}>
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
             <span className="dshr-sev">
               <span className="dshr-sev-dot" style={{ background: SEV_META[finding.severity].color }} />
               {SEV_META[finding.severity].icon} {t(`sev.${finding.severity}`)}
             </span>
-<<<<<<< HEAD
             <span className="dshr-finding-body">
               <span className="dshr-finding-title">
                 {localizeFinding(t, finding)}
@@ -159,12 +127,6 @@ export function AuditView({
                 <span className="dshr-finding-detail">{finding.detail}</span>
               )}
             </span>
-=======
-            <span className="dshr-finding-title">{localizeFinding(t, finding)}</span>
-            {finding.detail !== undefined && finding.detail !== '' && (
-              <span className="dshr-finding-detail">{finding.detail}</span>
-            )}
->>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
             <span className="dshr-item-time">{formatClock(finding.time, model.startTime)}</span>
           </button>
         ))
