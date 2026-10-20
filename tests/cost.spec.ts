@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest'
+<<<<<<< HEAD
 import { estimateCost, estimateCostDetailed, formatUsd } from '../src/core/cost.js'
+=======
+import { estimateCost, formatUsd } from '../src/core/cost.js'
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 import { buildTimeline } from '../src/core/timeline.js'
 import { parseSessionJsonl } from '../src/core/decode.js'
 import { sessionA } from '../demo/samples.js'
@@ -24,6 +28,7 @@ describe('estimateCost', () => {
     expect(cost.usd).toBeGreaterThan(0)
   })
 
+<<<<<<< HEAD
   it('prices a mixed-model session per model instead of applying one rate to all tokens', () => {
     const flash = { input: 1_000_000, output: 0, cacheRead: 0, cacheWrite: 0, reasoning: 0, billedInput: 1_000_000 }
     const pro = { input: 1_000_000, output: 0, cacheRead: 0, cacheWrite: 0, reasoning: 0, billedInput: 1_000_000 }
@@ -32,6 +37,8 @@ describe('estimateCost', () => {
     expect(result.usd).toBeCloseTo(0.27 + 1.1, 6)
   })
 
+=======
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   it('formats sub-cent amounts with enough precision', () => {
     expect(formatUsd(0.0042)).toBe('$0.0042')
     expect(formatUsd(0.042)).toBe('$0.042')

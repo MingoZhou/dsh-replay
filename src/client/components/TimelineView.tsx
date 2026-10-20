@@ -24,6 +24,7 @@ function TokenStrip({
   const { t } = useI18n()
   const samples = model.usageSamples
   if (samples.length === 0) return null
+<<<<<<< HEAD
   let max = 1
   for (const sample of samples) {
     const value =
@@ -39,6 +40,12 @@ function TokenStrip({
     const next = samples[index + 1]
     if (next !== undefined) nextSeq.set(samples[index].seq, next.seq)
   }
+=======
+  const max = Math.max(
+    ...samples.map(s => s.usage.inputTokens + (s.usage.cacheReadTokens ?? 0) + (s.usage.cacheWriteTokens ?? 0) + s.usage.outputTokens),
+    1,
+  )
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   return (
     <div className="dshr-tokenstrip">
       <div className="dshr-tokenstrip-head">
@@ -65,7 +72,12 @@ function TokenStrip({
             sample.usage.inputTokens + (sample.usage.cacheReadTokens ?? 0) + (sample.usage.cacheWriteTokens ?? 0)
           const output = sample.usage.outputTokens
           const isCurrent =
+<<<<<<< HEAD
             currentSeq >= sample.seq && (nextSeq.get(sample.seq) ?? Number.POSITIVE_INFINITY) > currentSeq
+=======
+            currentSeq >= sample.seq &&
+            (samples.find(s => s.seq > sample.seq)?.seq ?? Number.POSITIVE_INFINITY) > currentSeq
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
           return (
             <button
               key={`${sample.turn}/${sample.step}`}
@@ -90,11 +102,17 @@ function TokenStrip({
 export function TimelineView({
   model,
   jumpToSeq,
+<<<<<<< HEAD
   jumpNonce,
 }: {
   model: TimelineModel
   jumpToSeq?: number
   jumpNonce?: number
+=======
+}: {
+  model: TimelineModel
+  jumpToSeq?: number
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 }): React.ReactElement {
   const { t } = useI18n()
   const [query, setQuery] = useState('')
@@ -107,7 +125,10 @@ export function TimelineView({
       return (
         item.label.toLowerCase().includes(q) ||
         (item.text?.toLowerCase().includes(q) ?? false) ||
+<<<<<<< HEAD
         (item.reasoningText?.toLowerCase().includes(q) ?? false) ||
+=======
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
         (item.toolCall !== undefined &&
           (item.toolCall.name.toLowerCase().includes(q) ||
             item.toolCall.argumentsRaw.toLowerCase().includes(q) ||
@@ -115,6 +136,7 @@ export function TimelineView({
       )
     })
   }, [model.items, query, kinds])
+<<<<<<< HEAD
   const [selectedSeq, setSelectedSeq] = useState<number>()
   const [playing, setPlaying] = useState(false)
   const [speed, setSpeed] = useState(4)
@@ -137,6 +159,17 @@ export function TimelineView({
     setSelectedSeq(seq)
     setPlaying(false)
   }
+=======
+  const [cursor, setCursor] = useState(items.length > 0 ? items.length - 1 : 0)
+  const [playing, setPlaying] = useState(false)
+  const [speed, setSpeed] = useState(4)
+  const railRef = useRef<HTMLDivElement>(null)
+  const current: TimelineItem | undefined = items[Math.min(cursor, items.length - 1)]
+
+  useEffect(() => {
+    setCursor(c => Math.min(c, Math.max(0, items.length - 1)))
+  }, [items.length])
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 
   const toggleKind = (kind: string): void => {
     setKinds(prev => {
@@ -152,12 +185,21 @@ export function TimelineView({
 
   useEffect(() => {
     if (jumpToSeq === undefined) return
+<<<<<<< HEAD
     const index = items.findIndex(item => item.seq >= jumpToSeq)
     if (index >= 0) {
       setSelectedSeq(items[index].seq)
       setPlaying(false)
     }
   }, [jumpToSeq, jumpNonce, items])
+=======
+    const index = items.findIndex(i => i.seq >= jumpToSeq)
+    if (index >= 0) {
+      setCursor(index)
+      setPlaying(false)
+    }
+  }, [jumpToSeq, items])
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 
   useEffect(() => {
     if (!playing) return
@@ -165,10 +207,17 @@ export function TimelineView({
       setPlaying(false)
       return
     }
+<<<<<<< HEAD
     const timer = setTimeout(() => {
       const next = items[cursor + 1]
       if (next !== undefined) setSelectedSeq(next.seq)
     }, delayFor(items[cursor], items[cursor + 1], speed))
+=======
+    const timer = setTimeout(
+      () => setCursor(c => Math.min(c + 1, items.length - 1)),
+      delayFor(items[cursor], items[cursor + 1], speed),
+    )
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
     return () => clearTimeout(timer)
   }, [playing, cursor, speed, items])
 
@@ -183,7 +232,11 @@ export function TimelineView({
     items.forEach((item, index) => {
       if (item.turn !== undefined && item.turn !== lastTurn) {
         lastTurn = item.turn
+<<<<<<< HEAD
         const turnModel = model.turns.find(turn => turn.turn === item.turn)
+=======
+        const turnModel = model.turns.find(t => t.turn === item.turn)
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
         rows.push({
           head: {
             turn: item.turn,
@@ -203,6 +256,7 @@ export function TimelineView({
   }
 
   const togglePlay = (): void => {
+<<<<<<< HEAD
     if (!playing && cursor >= items.length - 1) {
       const first = items[0]
       if (first !== undefined) setSelectedSeq(first.seq)
@@ -232,6 +286,10 @@ export function TimelineView({
       event.preventDefault()
       togglePlay()
     }
+=======
+    if (!playing && cursor >= items.length - 1) setCursor(0)
+    setPlaying(p => !p)
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   }
 
   return (
@@ -241,14 +299,23 @@ export function TimelineView({
           className="dshr-play-btn"
           data-playing={playing || undefined}
           onClick={togglePlay}
+<<<<<<< HEAD
           aria-label={playing ? t('tl.pause') : t('tl.play')}
+=======
+          aria-label={playing ? 'pause' : 'play'}
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
         >
           {playing ? '❚❚' : '▶'}
         </button>
         <button
           className="dshr-speed"
+<<<<<<< HEAD
           onClick={() => setSpeed(value => SPEEDS[(SPEEDS.indexOf(value) + 1) % SPEEDS.length])}
           title={t('tl.speed')}
+=======
+          onClick={() => setSpeed(s => SPEEDS[(SPEEDS.indexOf(s) + 1) % SPEEDS.length])}
+          title="playback speed"
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
         >
           {speed}×
         </button>
@@ -258,9 +325,15 @@ export function TimelineView({
           min={0}
           max={Math.max(0, items.length - 1)}
           value={Math.min(cursor, Math.max(0, items.length - 1))}
+<<<<<<< HEAD
           onChange={event => {
             const next = items[Number(event.target.value)]
             if (next !== undefined) select(next.seq)
+=======
+          onChange={e => {
+            setCursor(Number(e.target.value))
+            setPlaying(false)
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
           }}
           aria-label={t('play.position')}
         />
@@ -273,8 +346,13 @@ export function TimelineView({
           type="search"
           placeholder={t('flt.search')}
           value={query}
+<<<<<<< HEAD
           onChange={event => {
             setQuery(event.target.value)
+=======
+          onChange={e => {
+            setQuery(e.target.value)
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
             setPlaying(false)
           }}
           aria-label={t('flt.search')}
@@ -298,6 +376,7 @@ export function TimelineView({
         model={model}
         currentSeq={current?.seq ?? 0}
         onJump={seq => {
+<<<<<<< HEAD
           const index = items.findIndex(item => item.seq >= seq)
           if (index >= 0) select(items[index].seq)
         }}
@@ -312,6 +391,18 @@ export function TimelineView({
           onKeyDown={onKeyDown}
         >
           {grouped.map((row, index) =>
+=======
+          const index = items.findIndex(i => i.seq >= seq)
+          if (index >= 0) {
+            setCursor(index)
+            setPlaying(false)
+          }
+        }}
+      />
+      <div className="dshr-timeline">
+        <div className="dshr-rail" ref={railRef}>
+          {grouped.map((row, i) =>
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
             'head' in row ? (
               <div key={`h${row.head.turn}`} className="dshr-turn-head">
                 <span>{t('tl.turn', { n: row.head.turn })}</span>
@@ -326,19 +417,30 @@ export function TimelineView({
               <button
                 key={row.item.seq}
                 className="dshr-item"
+<<<<<<< HEAD
                 role="option"
                 aria-selected={row.index === cursor}
+=======
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
                 data-kind={row.item.kind}
                 data-selected={row.index === cursor || undefined}
                 data-future={row.index > cursor || undefined}
                 data-shadowed={row.item.shadowed || undefined}
+<<<<<<< HEAD
                 onClick={() => select(row.item.seq)}
+=======
+                onClick={() => {
+                  setCursor(row.index)
+                  setPlaying(false)
+                }}
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
               >
                 <span className="dshr-item-kind">
                   {row.item.kind === 'tool'
                     ? row.item.toolCall?.name.slice(0, 10) ?? t('kind.tool')
                     : t(`kind.${row.item.kind}`)}
                 </span>
+<<<<<<< HEAD
                 <span className="dshr-item-label">
                   {row.item.kind === 'tool'
                     ? row.item.toolCall?.summary ?? row.item.label
@@ -349,6 +451,9 @@ export function TimelineView({
                     ✦
                   </span>
                 )}
+=======
+                <span className="dshr-item-label">{localizeItemLabel(t, row.item)}</span>
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
                 <span className="dshr-item-time">{formatClock(row.item.time, model.startTime)}</span>
               </button>
             ),

@@ -28,6 +28,7 @@ describe('compareSessions', () => {
     const b = parseSessionJsonl(sessionB())
     const c = parseSessionJsonl(sessionC())
     expect(compareSessions(b, c).related).toBe(true)
+<<<<<<< HEAD
     expect(compareSessions(b, c).relation).toBe('siblings')
   })
 
@@ -36,5 +37,7 @@ describe('compareSessions', () => {
     const b = parseSessionJsonl(sessionB())
     expect(compareSessions(a, b).relation).toBe('a-parent-of-b')
     expect(compareSessions(b, a).relation).toBe('b-parent-of-a')
+=======
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   })
 })

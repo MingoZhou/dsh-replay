@@ -11,6 +11,7 @@ export interface ExportSession {
   title?: string
 }
 
+<<<<<<< HEAD
 export interface BuildReplayOptions {
   lang?: 'en' | 'zh'
   title?: string
@@ -31,6 +32,18 @@ export function buildReplayHtml(
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="generator" content="dsh-replay" />
 <title>dsh-replay — ${title.replaceAll('&', '&amp;').replaceAll('<', '&lt;')}</title>
+=======
+export function buildReplayHtml(viewerSource: string, sessions: ExportSession[]): string {
+  const data = JSON.stringify({ sessions }).replaceAll('<', '\\u003c')
+  const safeViewer = viewerSource.replaceAll('</script>', '<\\/script>')
+  const title = sessions[0]?.title ?? 'session replay'
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>dsh-replay — ${title.replaceAll('<', '&lt;')}</title>
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 <style>html, body, #root { height: 100%; margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }</style>
 </head>
 <body>
@@ -51,9 +64,12 @@ export function downloadReplayHtml(html: string, filename: string): void {
   link.click()
   setTimeout(() => URL.revokeObjectURL(url), 5000)
 }
+<<<<<<< HEAD
 
 export function formatBytes(bytes: number): string {
   if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
   if (bytes >= 1024) return `${Math.round(bytes / 1024)} KB`
   return `${bytes} B`
 }
+=======
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d

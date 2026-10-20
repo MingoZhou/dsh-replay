@@ -43,6 +43,7 @@ describe('buildTimeline', () => {
     expect(fork.seedBoundarySeq).toBe(16)
     expect(fork.items.some(i => i.type === 'session/end-seed')).toBe(true)
   })
+<<<<<<< HEAD
 
   it('keeps reasoning text and shows the system prompt', () => {
     const text = [
@@ -70,4 +71,6 @@ describe('buildTimeline', () => {
     expect(model.items.some(item => item.type === 'system/message' && item.text === 'be nice')).toBe(true)
     expect(Object.keys(model.modelTotals)).toContain('deepseek-flash')
   })
+=======
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 })

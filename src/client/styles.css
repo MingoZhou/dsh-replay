@@ -53,9 +53,13 @@ body[data-ds-dark-theme] .dshr-root,
 .dshr-root *::before,
 .dshr-root *::after { box-sizing: border-box; }
 
+<<<<<<< HEAD
 /* Keep the button reset weak enough that component classes can style a button.
    The previous `.dshr-root button` selector beat `.dshr-btn` / card classes. */
 .dshr-root :where(button) {
+=======
+.dshr-root button {
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   font: inherit;
   color: inherit;
   background: none;
@@ -719,6 +723,7 @@ body[data-ds-dark-theme] .dshr-root,
   margin-bottom: 8px;
 }
 .dshr-root .dshr-picker-row:hover { border-color: var(--dshr-accent); }
+<<<<<<< HEAD
 
 /* ---- 0.4.2: archive dashboard, cost editor, export dialog, audit ---- */
 .dshr-header-sub {
@@ -966,3 +971,5 @@ body[data-ds-dark-theme] .dshr-root,
   .dshr-modal, .dshr-skeleton, .dshr-play-btn[data-playing='true'], .dshr-mascot-state .dshr-mascot { animation: none; }
   .dshr-item, .dshr-bar-in, .dshr-bar-out, .dshr-hbar-fill { transition: none; }
 }
+=======
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d

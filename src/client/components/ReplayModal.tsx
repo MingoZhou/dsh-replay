@@ -1,9 +1,17 @@
+<<<<<<< HEAD
 import React, { useEffect, useRef } from 'react'
+=======
+import React, { useEffect } from 'react'
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 import type { ReplayApi } from '../api.js'
 import { Mascot } from '../mascot.js'
 import { ReplayApp } from './ReplayApp.js'
 
+<<<<<<< HEAD
 /** Full-screen modal hosting the session review app, opened from the sidebar. */
+=======
+/** Full-screen modal hosting the replay app, opened from the sidebar button. */
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 export function ReplayModal({
   api,
   onClose,
@@ -13,6 +21,7 @@ export function ReplayModal({
   onClose: () => void
   closeLabel: string
 }): React.ReactElement {
+<<<<<<< HEAD
   const dialogRef = useRef<HTMLDivElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
 
@@ -47,10 +56,19 @@ export function ReplayModal({
       document.body.style.overflow = previousOverflow
       previous?.focus()
     }
+=======
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   }, [onClose])
 
   return (
     <div className="dshr-modal-backdrop" onClick={onClose}>
+<<<<<<< HEAD
       <div
         ref={dialogRef}
         className="dshr-modal"
@@ -59,6 +77,9 @@ export function ReplayModal({
         aria-label="dsh-replay"
         onClick={event => event.stopPropagation()}
       >
+=======
+      <div className="dshr-modal" onClick={event => event.stopPropagation()}>
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
         <div className="dshr-modal-chrome">
           <Mascot mood="idle" size={30} />
           <span className="dshr-modal-title">dsh-replay</span>
@@ -75,7 +96,11 @@ export function ReplayModal({
             </svg>
             GitHub
           </a>
+<<<<<<< HEAD
           <button ref={closeRef} className="dshr-modal-close" onClick={onClose} aria-label={closeLabel}>
+=======
+          <button className="dshr-modal-close" onClick={onClose} aria-label={closeLabel}>
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
             ✕
           </button>
         </div>

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
+<<<<<<< HEAD
 import { auditSession } from '../../core/audit.js'
 import { compareSessions, type CompareResult } from '../../core/compare.js'
 import { estimateCostDetailed, formatMoney } from '../../core/cost.js'
@@ -8,6 +9,12 @@ import type { ParsedSession } from '../../core/types.js'
 import { formatDuration, formatTokens, shortId, type ReplayApi, type SessionEntry } from '../api.js'
 import { useI18n } from '../i18n.js'
 import { usePricing } from '../pricing.js'
+=======
+import { compareSessions, type CompareResult } from '../../core/compare.js'
+import type { ParsedSession } from '../../core/types.js'
+import { formatDuration, formatTokens, shortId, type ReplayApi, type SessionEntry } from '../api.js'
+import { useI18n } from '../i18n.js'
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 
 function Row({
   label,
@@ -32,23 +39,30 @@ function Row({
   )
 }
 
+<<<<<<< HEAD
 function preview(event: { type: string; data: unknown } | undefined): string {
   if (event === undefined) return '—'
   const data = redactText(JSON.stringify(event.data) ?? '').text
   return `${event.type}\n${data.slice(0, 700)}${data.length > 700 ? '…' : ''}`
 }
 
+=======
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 export function CompareView({
   api,
   session,
   entries,
   title,
+<<<<<<< HEAD
   onOpenSession,
+=======
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 }: {
   api: ReplayApi
   session: ParsedSession
   entries: SessionEntry[]
   title?: string
+<<<<<<< HEAD
   onOpenSession?: (id: string) => void
 }): React.ReactElement {
   const { t } = useI18n()
@@ -64,6 +78,17 @@ export function CompareView({
   const defaultOther =
     others.find(entry => entry.header.id === session.header.parentSession)?.header.id ??
     others.find(entry => entry.header.parentSession === session.header.id)?.header.id ??
+=======
+}): React.ReactElement {
+  const { t } = useI18n()
+  const others = useMemo(
+    () => entries.filter(e => e.header.id !== session.header.id),
+    [entries, session],
+  )
+  const defaultOther =
+    others.find(e => e.header.id === session.header.parentSession)?.header.id ??
+    others.find(e => e.header.parentSession === session.header.id)?.header.id ??
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
     others[0]?.header.id
   const [otherId, setOtherId] = useState(defaultOther)
   const [other, setOther] = useState<ParsedSession>()
@@ -78,6 +103,7 @@ export function CompareView({
     let cancelled = false
     api
       .getSession(otherId)
+<<<<<<< HEAD
       .then(value => {
         if (!cancelled) {
           setOther(value)
@@ -85,6 +111,15 @@ export function CompareView({
         }
       })
       .catch(reason => !cancelled && setError(String(reason)))
+=======
+      .then(s => {
+        if (!cancelled) {
+          setOther(s)
+          setError(undefined)
+        }
+      })
+      .catch(e => !cancelled && setError(String(e)))
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
     return () => {
       cancelled = true
     }
@@ -92,6 +127,7 @@ export function CompareView({
 
   const result: CompareResult | undefined = useMemo(() => {
     if (other === undefined) return undefined
+<<<<<<< HEAD
     return compareSessions(
       session,
       other,
@@ -118,6 +154,13 @@ export function CompareView({
     const report = auditSession(other)
     return report.counts.critical + report.counts.serious
   }, [other])
+=======
+    return compareSessions(session, other, {
+      a: title,
+      b: others.find(e => e.header.id === other.header.id)?.title,
+    })
+  }, [session, other, title, others])
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 
   if (others.length === 0) {
     return <div className="dshr-center">{t('cmp.none')}</div>
@@ -130,7 +173,11 @@ export function CompareView({
         <select
           className="dshr-select"
           value={otherId}
+<<<<<<< HEAD
           onChange={event => setOtherId(event.target.value)}
+=======
+          onChange={e => setOtherId(e.target.value)}
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
           aria-label={t('cmp.aria')}
         >
           {others.map(entry => (
@@ -147,6 +194,7 @@ export function CompareView({
         <>
           {result.related && result.divergenceSeq !== undefined && (
             <div className="dshr-divergence">
+<<<<<<< HEAD
               <div className="dshr-divergence-title">
                 {t('cmp.divergence', { seq: result.divergenceSeq })}
               </div>
@@ -166,6 +214,9 @@ export function CompareView({
                   </button>
                 </div>
               </div>
+=======
+              {t('cmp.divergence', { seq: result.divergenceSeq })}
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
             </div>
           )}
           <div className="dshr-compare-grid">
@@ -179,10 +230,13 @@ export function CompareView({
               </tr>
             </thead>
             <tbody>
+<<<<<<< HEAD
               <tr>
                 <td>{t('cmp.relation')}</td>
                 <td colSpan={3}>{t(`cmp.relation.${result.relation}`)}</td>
               </tr>
+=======
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
               <Row label={t('cmp.turns')} a={result.a.turns} b={result.b.turns} />
               <Row label={t('cmp.steps')} a={result.a.steps} b={result.b.steps} />
               <Row label={t('cmp.events')} a={result.a.events} b={result.b.events} />
@@ -212,6 +266,7 @@ export function CompareView({
                 b={result.b.durationMs}
                 format={formatDuration}
               />
+<<<<<<< HEAD
               <Row label={t('cmp.risk')} a={riskA} b={riskB} />
               {costA !== undefined && costB !== undefined && (
                 <tr>
@@ -227,6 +282,8 @@ export function CompareView({
                   </td>
                 </tr>
               )}
+=======
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
             </tbody>
           </table>
           {result.toolNames.length > 0 && (

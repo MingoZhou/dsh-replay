@@ -1,10 +1,16 @@
 /**
+<<<<<<< HEAD
  * Lightweight EN/中文 i18n for the review UI. The dictionary is plain data;
  * `useI18n()` provides `t(key, params)` plus the current language and setter.
  * Language resolution: explicit choice (persisted) > browser language > en.
  *
  * A tiny external store keeps the sidebar button, the modal chrome and the
  * embedded app in sync when the language is toggled from any of them.
+=======
+ * Lightweight EN/中文 i18n for the replay UI. The dictionary is plain data;
+ * `useI18n()` provides `t(key, params)` plus the current language and setter.
+ * Language resolution: explicit choice (persisted) > browser language > en.
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
  */
 import React from 'react'
 
@@ -15,6 +21,7 @@ const STORAGE_KEY = 'dshr-lang'
 type Dict = Record<string, string>
 
 const en: Dict = {
+<<<<<<< HEAD
   'btn.replay': 'Session Review',
   'modal.close': 'Close',
   'modal.title': 'Session review',
@@ -57,18 +64,34 @@ const en: Dict = {
   'flt.search': 'filter events…',
   'app.loadingText': 'Jing Xiaoshen is sorting the log…',
   'tab.dashboard': 'Dashboard',
+=======
+  'btn.replay': 'Session Replay',
+  'modal.close': 'Close',
+  'picker.title': 'Pick a session to replay',
+  'picker.empty': 'No sessions yet — run something first!',
+  'exp.button': 'Export HTML',
+  'exp.fail': 'Export failed: {error}',
+  'ov.cost': '≈ cost ({label}, est.)',
+  'flt.search': 'filter events…',
+  'app.loadingText': 'Jing Xiaoshen is rewinding the log…',
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   'tab.overview': 'Overview',
   'ov.tokensChart': 'cumulative tokens',
   'ov.toolTime': 'tool time by tool',
   'ov.inputTokens': 'input tokens (billed)',
   'ov.outputTokens': 'output tokens',
+<<<<<<< HEAD
   'ov.findings': 'risk findings',
+=======
+  'ov.findings': 'audit findings',
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   'tab.timeline': 'Timeline',
   'tab.audit': 'Audit',
   'tab.forks': 'Forks',
   'tab.compare': 'Compare',
   'app.loading': 'Loading session…',
   'app.error': 'Failed to load session — {error}. Is the dsh-replay host plugin enabled?',
+<<<<<<< HEAD
   'app.openSession': 'Open a session to review it.',
   'dash.title': 'Session archive',
   'dash.subtitle': 'Every session on this machine, at a glance.',
@@ -90,6 +113,12 @@ const en: Dict = {
   'tl.play': 'play',
   'tl.pause': 'pause',
   'tl.speed': 'playback speed',
+=======
+  'app.openSession': 'Open a session to replay it.',
+  'hdr.turns': '{n} turns',
+  'play.event': 'event {i}/{n}',
+  'play.position': 'timeline position',
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   'ts.title': 'tokens per step',
   'ts.input': 'input (billed)',
   'ts.output': 'output',
@@ -98,10 +127,13 @@ const en: Dict = {
   'ts.barTitle': 'turn {turn} step {step} — in {in}, out {out}',
   'tl.empty': 'No renderable events in this session yet.',
   'tl.turn': 'Turn {n}',
+<<<<<<< HEAD
   'tl.reasoning': 'thinking',
   'tl.system': 'system prompt',
   'tl.model': 'model selected: {model}',
   'tl.summary': 'summary',
+=======
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   'kind.user': 'user',
   'kind.assistant': 'assistant',
   'kind.tool': 'tool',
@@ -119,14 +151,20 @@ const en: Dict = {
   'detail.cacheRead': 'cache read',
   'detail.cacheWrite': 'cache write',
   'detail.output': 'output',
+<<<<<<< HEAD
   'detail.reasoning': 'reasoning',
   'detail.shadowed': 'shadowed by compaction',
   'detail.copy': 'copy',
   'detail.copied': 'copied',
+=======
+  'detail.reasoning': '└ reasoning',
+  'detail.shadowed': 'shadowed by compaction',
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   'sev.critical': 'critical',
   'sev.serious': 'serious',
   'sev.warning': 'warning',
   'sev.info': 'info',
+<<<<<<< HEAD
   'audit.empty': 'No findings — no rule matched this session.',
   'audit.noRisk': 'No risk findings.',
   'audit.coverage': 'Regex scan over tool names and arguments. Tool output content is not inspected; false negatives and false positives are possible.',
@@ -142,6 +180,9 @@ const en: Dict = {
   'audit.category.config': 'config',
   'audit.category.error': 'error',
   'audit.category.secret': 'credential',
+=======
+  'audit.empty': 'No findings — nothing sensitive happened in this session.',
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   'cmp.with': 'Compare with',
   'cmp.parent': '(parent)',
   'cmp.fork': '(fork)',
@@ -159,6 +200,7 @@ const en: Dict = {
   'cmp.duration': 'duration',
   'cmp.toolMix': 'tool mix',
   'cmp.tool': 'tool',
+<<<<<<< HEAD
   'cmp.cost': 'est. cost',
   'cmp.risk': 'risk findings',
   'cmp.divergence':
@@ -172,6 +214,11 @@ const en: Dict = {
   'cmp.relation.b-parent-of-a': 'B is an ancestor of A',
   'cmp.relation.siblings': 'siblings (shared parent)',
   'cmp.relation.none': 'no direct lineage',
+=======
+  'cmp.divergence':
+    'These sessions share lineage and diverge at seq {seq} — identical before it, different history after.',
+  'cmp.aria': 'session to compare against',
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   'forks.empty': 'No sessions found.',
   'forks.edge': 'forked @ {n} events',
   'forks.subagent': ' · subagent',
@@ -179,24 +226,38 @@ const en: Dict = {
   'forks.aria': 'session fork tree',
   'forks.untitled': 'Untitled',
   'forks.forkTag': ' · fork',
+<<<<<<< HEAD
   'forks.hint': 'Session lineage: forked sessions and subagents hang under their parent as a tree; sessions without lineage are listed as cards. Click any card to review it.',
   'forks.compare': 'compare',
   'forks.open': 'open',
+=======
+  'forks.hint': 'Session lineage: forked sessions and subagents hang under their parent as a tree; sessions without lineage are listed as cards. Click any card to replay it.',
+  // audit finding messages (rule keys)
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   'f.shell.dangerous': 'shell: {why}',
   'f.shell.plain': 'shell command via {name}',
   'f.file.sensitive': 'file write touches sensitive path',
   'f.file.write': 'file mutation via {name}',
+<<<<<<< HEAD
   'f.file.secret': 'credential material written to a file',
   'f.file.destructive': 'destructive file operation via {name}',
   'f.read.sensitive': 'access to sensitive path via {name}',
   'f.network': 'network request may carry sensitive data via {name}',
   'f.output.secret': 'tool output contains credential material',
+=======
+  'f.read.sensitive': 'access to sensitive path via {name}',
+  'f.network': 'network access via {name}',
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   'f.approval.denied': 'user denied an approval',
   'f.sandbox.change': 'sandbox mode changed',
   'f.permission.change': 'permission preset changed',
   'f.subagent': 'subagent spawned ({mode})',
   'f.tool.error': 'tool failed: {name}',
   'f.turn.error': 'turn ended abnormally: {kind}',
+<<<<<<< HEAD
+=======
+  // dangerous-shell reasons
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   'why.rm-rf': 'recursive/forced delete',
   'why.sudo': 'privilege escalation',
   'why.chmod': 'permission change',
@@ -205,12 +266,16 @@ const en: Dict = {
   'why.disk': 'raw disk operation',
   'why.remote': 'remote host access',
   'why.creds': 'credential material in command',
+<<<<<<< HEAD
   'why.exec-policy': 'script execution policy change',
   'why.system-tamper': 'boot/shadow/log tampering',
   'why.persistence': 'persistence or account change',
   'why.encoded-shell': 'encoded PowerShell command',
   'why.exfil': 'possible credential exfiltration',
   'why.publish': 'package/release publish',
+=======
+  // meta timeline labels
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   'meta.turnEnd': 'turn ended: {reason}',
   'meta.compactSummary': 'context compacted (summary)',
   'meta.compactPrune': 'context pruned',
@@ -223,6 +288,7 @@ const en: Dict = {
   'meta.seed': 'seed boundary (fork/resume point)',
   'meta.retry': 'model request retried',
   'meta.goal': 'goal changed',
+<<<<<<< HEAD
   'meta.system': 'system prompt',
   'meta.model': 'model: {model}',
   'meta.command': 'command: {command}',
@@ -277,12 +343,33 @@ const zh: Dict = {
   'ov.inputTokens': '输入 token（计费）',
   'ov.outputTokens': '输出 token',
   'ov.findings': '风险发现',
+=======
+}
+
+const zh: Dict = {
+  'btn.replay': '会话回放',
+  'modal.close': '关闭',
+  'picker.title': '选择要回放的会话',
+  'picker.empty': '还没有会话 — 先去跑点什么吧!',
+  'exp.button': '导出 HTML',
+  'exp.fail': '导出失败:{error}',
+  'ov.cost': '≈ 成本({label},估算)',
+  'flt.search': '搜索事件…',
+  'app.loadingText': '鲸小深正在倒带日志…',
+  'tab.overview': '概览',
+  'ov.tokensChart': '累计 Token',
+  'ov.toolTime': '各工具耗时',
+  'ov.inputTokens': '输入 token(计费)',
+  'ov.outputTokens': '输出 token',
+  'ov.findings': '审计发现',
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   'tab.timeline': '时间线',
   'tab.audit': '审计',
   'tab.forks': '分支',
   'tab.compare': '对比',
   'app.loading': '会话加载中…',
   'app.error': '会话加载失败 — {error}。请确认 dsh-replay 宿主插件已启用。',
+<<<<<<< HEAD
   'app.openSession': '打开一个会话即可复盘。',
   'dash.title': '会话档案',
   'dash.subtitle': '这台机器上的所有会话，一眼看完。',
@@ -316,6 +403,20 @@ const zh: Dict = {
   'tl.system': '系统提示词',
   'tl.model': '选择模型：{model}',
   'tl.summary': '摘要',
+=======
+  'app.openSession': '打开一个会话即可回放。',
+  'hdr.turns': '{n} 轮',
+  'play.event': '事件 {i}/{n}',
+  'play.position': '时间线位置',
+  'ts.title': '每步 token',
+  'ts.input': '输入(计费)',
+  'ts.output': '输出',
+  'ts.total': 'Σ 输入 {in} · 输出 {out}',
+  'ts.cacheRead': ' · 缓存读 {n}',
+  'ts.barTitle': '第 {turn} 轮第 {step} 步 — 输入 {in},输出 {out}',
+  'tl.empty': '该会话暂无可渲染事件。',
+  'tl.turn': '第 {n} 轮',
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   'kind.user': '用户',
   'kind.assistant': '助手',
   'kind.tool': '工具',
@@ -323,12 +424,17 @@ const zh: Dict = {
   'detail.message': '消息',
   'detail.arguments': '参数',
   'detail.result': '结果',
+<<<<<<< HEAD
   'detail.usage': 'Token 用量（本步）',
+=======
+  'detail.usage': 'Token 用量(本步)',
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   'detail.eventData': '事件数据',
   'detail.callId': '调用 ID',
   'detail.duration': '耗时',
   'detail.noResult': '未记录结果',
   'detail.error': '错误',
+<<<<<<< HEAD
   'detail.inputUncached': '输入（未缓存）',
   'detail.cacheRead': '缓存读',
   'detail.cacheWrite': '缓存写',
@@ -337,10 +443,19 @@ const zh: Dict = {
   'detail.shadowed': '已被压缩遮蔽',
   'detail.copy': '复制',
   'detail.copied': '已复制',
+=======
+  'detail.inputUncached': '输入(未缓存)',
+  'detail.cacheRead': '缓存读',
+  'detail.cacheWrite': '缓存写',
+  'detail.output': '输出',
+  'detail.reasoning': '└ 推理',
+  'detail.shadowed': '已被压缩遮蔽',
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   'sev.critical': '严重',
   'sev.serious': '较高',
   'sev.warning': '警告',
   'sev.info': '信息',
+<<<<<<< HEAD
   'audit.empty': '未命中当前规则。',
   'audit.noRisk': '未发现风险。',
   'audit.coverage': '基于工具名/参数的正则扫描；不检查工具输出内容，可能漏报或误报。',
@@ -359,6 +474,12 @@ const zh: Dict = {
   'cmp.with': '对比对象',
   'cmp.parent': '（父会话）',
   'cmp.fork': '（分支）',
+=======
+  'audit.empty': '无发现 — 本会话没有敏感操作。',
+  'cmp.with': '对比对象',
+  'cmp.parent': '(父会话)',
+  'cmp.fork': '(分支)',
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   'cmp.none': '没有其他会话可对比。',
   'cmp.metric': '指标',
   'cmp.delta': 'Δ',
@@ -367,12 +488,17 @@ const zh: Dict = {
   'cmp.events': '事件数',
   'cmp.toolCalls': '工具调用',
   'cmp.toolErrors': '工具错误',
+<<<<<<< HEAD
   'cmp.inputTokens': '输入 token（计费）',
+=======
+  'cmp.inputTokens': '输入 token(计费)',
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   'cmp.outputTokens': '输出 token',
   'cmp.cacheTokens': '缓存读 token',
   'cmp.duration': '时长',
   'cmp.toolMix': '工具分布',
   'cmp.tool': '工具',
+<<<<<<< HEAD
   'cmp.cost': '估算成本',
   'cmp.risk': '风险发现',
   'cmp.divergence': '这两个会话同源，自 seq {seq} 起分歧 — 之前完全一致，之后历史不同。',
@@ -388,10 +514,18 @@ const zh: Dict = {
   'forks.empty': '未找到会话。',
   'forks.edge': '于第 {n} 个事件处分叉',
   'forks.subagent': ' · 子 Agent',
+=======
+  'cmp.divergence': '这两个会话同源,自 seq {seq} 起分歧 — 之前完全一致,之后历史不同。',
+  'cmp.aria': '选择对比会话',
+  'forks.empty': '未找到会话。',
+  'forks.edge': '于第 {n} 个事件处分叉',
+  'forks.subagent': ' · 子Agent',
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   'forks.orphan': ' · 父会话缺失',
   'forks.aria': '会话分支树',
   'forks.untitled': '未命名会话',
   'forks.forkTag': ' · 分支',
+<<<<<<< HEAD
   'forks.hint': '会话血缘：fork 出的会话和子 Agent 会挂在父会话下形成树；没有血缘的会话平铺为卡片。点击任意卡片即可复盘该会话。',
   'forks.compare': '对比',
   'forks.open': '打开',
@@ -410,6 +544,21 @@ const zh: Dict = {
   'f.subagent': '派生子 Agent（{mode}）',
   'f.tool.error': '工具失败：{name}',
   'f.turn.error': '轮次异常结束：{kind}',
+=======
+  'forks.hint': '会话血缘:fork 出的会话和子 Agent 会挂在父会话下形成树;没有血缘的会话平铺为卡片。点击任意卡片即可回放该会话。',
+  'f.shell.dangerous': '危险 shell:{why}',
+  'f.shell.plain': '通过 {name} 执行 shell 命令',
+  'f.file.sensitive': '文件写入涉及敏感路径',
+  'f.file.write': '通过 {name} 修改文件',
+  'f.read.sensitive': '通过 {name} 访问敏感路径',
+  'f.network': '通过 {name} 访问网络',
+  'f.approval.denied': '用户拒绝了一次审批',
+  'f.sandbox.change': '沙箱模式变更',
+  'f.permission.change': '权限预设变更',
+  'f.subagent': '派生子 Agent({mode})',
+  'f.tool.error': '工具失败:{name}',
+  'f.turn.error': '轮次异常结束:{kind}',
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   'why.rm-rf': '递归/强制删除',
   'why.sudo': '提权操作',
   'why.chmod': '权限修改',
@@ -418,6 +567,7 @@ const zh: Dict = {
   'why.disk': '底层磁盘操作',
   'why.remote': '远程主机访问',
   'why.creds': '命令中包含凭据',
+<<<<<<< HEAD
   'why.exec-policy': '修改脚本执行策略',
   'why.system-tamper': '篡改启动/卷影/日志',
   'why.persistence': '持久化或账户变更',
@@ -439,6 +589,20 @@ const zh: Dict = {
   'meta.system': '系统提示词',
   'meta.model': '模型：{model}',
   'meta.command': '命令：{command}',
+=======
+  'meta.turnEnd': '轮次结束:{reason}',
+  'meta.compactSummary': '上下文已压缩(摘要)',
+  'meta.compactPrune': '上下文已修剪',
+  'meta.approvalAsked': '请求审批:{tool}',
+  'meta.approvalDecided': '审批结果:{outcome}',
+  'meta.sandbox': '沙箱模式变更',
+  'meta.permission': '权限预设变更',
+  'meta.plan': '计划模式变更',
+  'meta.subagent': '派生子 Agent({mode})',
+  'meta.seed': '种子边界(fork/resume 点)',
+  'meta.retry': '模型请求已重试',
+  'meta.goal': '目标变更',
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 }
 
 const DICTS: Record<Lang, Dict> = { en, zh }
@@ -476,6 +640,7 @@ export function persistLang(lang: Lang): void {
   }
 }
 
+<<<<<<< HEAD
 // ---- tiny language store -------------------------------------------------
 let cachedLang: Lang | undefined
 const listeners = new Set<() => void>()
@@ -501,6 +666,8 @@ export function useLang(): Lang {
   return React.useSyncExternalStore(subscribeLang, getLang, getLang)
 }
 
+=======
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 export interface I18n {
   lang: Lang
   t: T
@@ -567,6 +734,7 @@ export function localizeItemLabel(t: T, item: TimelineItem): string {
       return t('meta.retry')
     case 'goal/change':
       return t('meta.goal')
+<<<<<<< HEAD
     case 'system/message':
       return t('meta.system')
     case 'model/selection':
@@ -575,6 +743,8 @@ export function localizeItemLabel(t: T, item: TimelineItem): string {
       const command = field(d, 'command')
       return t('meta.command', { command: typeof command === 'string' ? command : JSON.stringify(d) })
     }
+=======
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
     default:
       return item.label
   }

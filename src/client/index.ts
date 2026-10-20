@@ -12,7 +12,11 @@ import React, { useSyncExternalStore } from 'react'
 import { HttpReplayApi } from './api.js'
 import { ReplayApp } from './components/ReplayApp.js'
 import { ReplayModal } from './components/ReplayModal.js'
+<<<<<<< HEAD
 import { makeT, useLang } from './i18n.js'
+=======
+import { detectLang, makeT } from './i18n.js'
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
 import { mascotImage } from './mascot-image.js'
 // esbuild is configured with `loader: { '.css': 'text' }`
 // eslint-disable-next-line import/no-unresolved
@@ -93,14 +97,22 @@ function SidebarIcon(): React.ReactElement {
 }
 
 function SidebarReplayButton(): React.ReactElement {
+<<<<<<< HEAD
   const lang = useLang()
   const t = makeT(lang)
+=======
+  const t = makeT(detectLang())
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   return React.createElement(
     'button',
     {
       className: 'dshr-sidebar-btn',
       onClick: () => modalStore.set(true),
+<<<<<<< HEAD
       title: `${t('btn.replay')} — ${t('app.reviewSub')}`,
+=======
+      title: t('btn.replay'),
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
     },
     React.createElement(SidebarIcon),
     React.createElement('span', null, t('btn.replay')),
@@ -109,9 +121,14 @@ function SidebarReplayButton(): React.ReactElement {
 
 function ReplayOverlay(): React.ReactElement | null {
   const open = useSyncExternalStore(modalStore.subscribe, modalStore.isOpen, modalStore.isOpen)
+<<<<<<< HEAD
   const lang = useLang()
   if (!open) return null
   const t = makeT(lang)
+=======
+  if (!open) return null
+  const t = makeT(detectLang())
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
   return React.createElement(ReplayModal, {
     api,
     onClose: () => modalStore.set(false),
@@ -130,7 +147,11 @@ export function apply(ctx: ClientContextLike): void {
 
   ctx.slots.inject('conversation.view', () =>
     ctx.slots.register(
+<<<<<<< HEAD
       { name: 'conversation.view', id: 'review', order: 60, label: 'Review' },
+=======
+      { name: 'conversation.view', id: 'replay', order: 60, label: 'Replay' },
+>>>>>>> 930f5bc9d31d316009e2f372989c19ffd642b08d
       ReplayTab,
     ),
   )
