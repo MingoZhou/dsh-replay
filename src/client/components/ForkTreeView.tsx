@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import type { SessionEntry } from '../api.js'
 import { shortId } from '../api.js'
 import { buildForkForest, type ForkNode } from '../../core/forktree.js'
@@ -27,7 +27,8 @@ function NodeCard({
 }): React.ReactElement {
   const tags: string[] = []
   if (node.header.origin === 'subagent') tags.push(t('forks.subagent'))
-  else if (node.header.parentSession !== undefined && !node.orphan) tags.push(t('forks.forkTag'))
+  else if ((node.parentId !== undefined && !node.orphan) || node.header.isSeeded === true) tags.push(t('forks.forkTag'))
+  if (node.inferred) tags.push(t('forks.inferred'))
   if (node.orphan) tags.push(t('forks.orphan'))
   return (
     <button
@@ -43,7 +44,9 @@ function NodeCard({
         {edgeLabel !== undefined ? `${edgeLabel} · ` : ''}
         {node.title !== undefined ? `${formatWhen(node.header.createdAt)} · ` : ''}
         {shortId(node.id)}
-        {tags.join('')}
+        {tags.map(tag => (
+          <span key={tag} className="dshr-picker-tag">{tag}</span>
+        ))}
       </span>
     </button>
   )
@@ -93,6 +96,7 @@ export function ForkTreeView({
 }): React.ReactElement {
   const { t } = useI18n()
   const forest = useMemo(() => buildForkForest(entries), [entries])
+  const [showAll, setShowAll] = useState(false)
 
   if (forest.roots.length === 0) {
     return <MascotState mood="happy" text={t('forks.empty')} />
@@ -104,6 +108,7 @@ export function ForkTreeView({
   const singles = forest.roots.filter(root => root.children.length === 0)
 
   return (
+    <div className="dshr-scroll">
     <div className="dshr-forks">
       <div className="dshr-forks-hint">{t('forks.hint')}</div>
       {families.map(root => (
@@ -112,12 +117,21 @@ export function ForkTreeView({
         </div>
       ))}
       {singles.length > 0 && (
-        <div className="dshr-forkgrid">
-          {singles.map(root => (
-            <NodeCard key={root.id} node={root} currentId={currentId} onSelect={onSelect} t={t} />
-          ))}
-        </div>
+        <>
+          <div className="dshr-subhead">{t('forks.singles', { n: singles.length })}</div>
+          <div className="dshr-forkgrid">
+            {(showAll ? singles : singles.slice(0, 12)).map(root => (
+              <NodeCard key={root.id} node={root} currentId={currentId} onSelect={onSelect} t={t} />
+            ))}
+          </div>
+          {!showAll && singles.length > 12 && (
+            <button className="dshr-linkbtn" onClick={() => setShowAll(true)}>
+              {t('common.more', { n: singles.length - 12 })}
+            </button>
+          )}
+        </>
       )}
+    </div>
     </div>
   )
 }

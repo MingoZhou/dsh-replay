@@ -4,3 +4,5 @@
       name: '@mingozhou/dsh-replay'
       config:
         routePrefix: /replay/api
+        # Most recent sessions summarised for the all-sessions dashboard.
+        # summaryLimit: 300

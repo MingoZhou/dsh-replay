@@ -1,7 +1,7 @@
 {
   "name": "@mingozhou/dsh-replay",
-  "version": "0.4.1",
-  "description": "Session replay, fork-tree, audit & compare visualization for DeepSeek Harness — time machine for your agent sessions",
+  "version": "1.0.0",
+  "description": "Session reports for DeepSeek Harness — cost in CNY, run health, file changes, security audit, cross-session dashboard and redacted sharing",
   "main": "lib/index.js",
   "directories": {
     "test": "tests"
@@ -22,7 +22,10 @@
     "observability",
     "audit",
     "timeline",
-    "visualization"
+    "visualization",
+    "cost",
+    "dashboard",
+    "redaction"
   ],
   "author": "MingoZhou",
   "license": "MIT",

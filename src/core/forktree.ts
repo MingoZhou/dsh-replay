@@ -18,6 +18,10 @@ export interface ForkNode {
   row: number
   /** True when parentSession points at a header we never saw. */
   orphan?: boolean
+  /** Parent this node hangs under (header lineage, or inferred for v3+ forks). */
+  parentId?: string
+  /** True when the edge was inferred from a shared first prompt, not read from the header. */
+  inferred?: boolean
 }
 
 export interface ForkForest {
@@ -30,24 +34,61 @@ export interface ForkForest {
 export interface SessionListEntry {
   header: SessionHeader
   title?: string
+  /**
+   * Identity of the session's first user message. Since format v3 an ordinary
+   * fork no longer records `parentSession`, but it inherits its source's
+   * events verbatim — so forks of one conversation share this key.
+   */
+  rootKey?: string
+  /** Exact inherited prefix length, when the reader reported it. */
+  inheritedEventCount?: number
+}
+
+/**
+ * Infer a parent for seeded sessions whose header carries none: the oldest
+ * non-seeded session sharing the same first prompt (else the oldest member).
+ */
+export function inferForkParents(entries: SessionListEntry[]): Map<string, string> {
+  const families = new Map<string, SessionListEntry[]>()
+  for (const entry of entries) {
+    if (entry.rootKey === undefined || entry.header.origin === 'subagent') continue
+    const list = families.get(entry.rootKey) ?? []
+    list.push(entry)
+    families.set(entry.rootKey, list)
+  }
+  const parents = new Map<string, string>()
+  for (const family of families.values()) {
+    if (family.length < 2) continue
+    const byAge = [...family].sort((a, b) => a.header.createdAt - b.header.createdAt)
+    const root = byAge.find(e => e.header.isSeeded !== true && e.header.seedLength === undefined) ?? byAge[0]
+    for (const entry of family) {
+      if (entry === root || entry.header.parentSession !== undefined) continue
+      parents.set(entry.header.id, root.header.id)
+    }
+  }
+  return parents
 }
 
 export function buildForkForest(entries: SessionListEntry[]): ForkForest {
   const nodes = new Map<string, ForkNode>()
-  for (const { header, title } of entries) {
+  const inferred = inferForkParents(entries)
+  for (const { header, title, inheritedEventCount } of entries) {
+    const inferredParent = header.parentSession === undefined ? inferred.get(header.id) : undefined
     nodes.set(header.id, {
       id: header.id,
       header,
       title,
       children: [],
-      seedLength: header.seedLength,
+      seedLength: header.seedLength ?? (inheritedEventCount !== undefined && inheritedEventCount > 0 ? inheritedEventCount : undefined),
       depth: 0,
       row: 0,
+      parentId: header.parentSession ?? inferredParent,
+      inferred: inferredParent !== undefined || undefined,
     })
   }
   const roots: ForkNode[] = []
   for (const node of nodes.values()) {
-    const parentId = node.header.parentSession
+    const parentId = node.parentId
     if (parentId === undefined) {
       roots.push(node)
       continue
@@ -97,7 +138,7 @@ export function lineageOf(forest: ForkForest, id: string): ForkNode[] {
   while (current !== undefined && !guard.has(current.id)) {
     guard.add(current.id)
     path.unshift(current)
-    const parentId = current.header.parentSession
+    const parentId = current.parentId
     current = parentId === undefined ? undefined : forest.nodes.get(parentId)
   }
   return path

@@ -175,7 +175,7 @@ export function Mascot({
 export function MascotState({
   mood,
   text,
-  size = 110,
+  size = 84,
 }: {
   mood: MascotMood
   text: string

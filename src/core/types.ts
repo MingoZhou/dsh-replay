@@ -1,5 +1,7 @@
 /**
- * Structural types for the DeepSeek Harness session log (format version 0).
+ * Structural types for the DeepSeek Harness session log. Written against
+ * format version 4 (harness 0.2.x) while staying tolerant of the older
+ * shapes (v0 packed chunk rows, index-based surface replacement, `seedLength`).
  *
  * These are intentionally *structural* copies of the shapes in
  * `@deepseek-ai/dsh-session` — the core analysis layer has zero runtime
@@ -23,7 +25,10 @@ export interface SessionHeader {
   createdAt: number
   cwd?: string
   parentSession?: string
+  /** Legacy (≤ v2) exact inherited prefix length. */
   seedLength?: number
+  /** v3+: the session carries a fork-inherited event prefix. */
+  isSeeded?: boolean
   origin?: 'subagent'
   delegationDepth?: number
   agentPreset?: string
@@ -37,7 +42,10 @@ export interface SessionEvent {
   data: JsonValue
   ignorable?: true
   sourceEventSeqs?: number[]
-  surfaceOp?: 'append' | { op: 'replace'; start: number; end: number }
+  surfaceOp?:
+    | 'append'
+    /** v4 addresses replaced nodes by seq; legacy logs used surface indexes. */
+    | { op: 'replace'; startSeq?: number; endSeq?: number; start?: number; end?: number }
 }
 
 /** Disjoint token counts. Billed input = input + cacheRead + cacheWrite. */
@@ -47,6 +55,17 @@ export interface TokenUsage {
   cacheReadTokens?: number
   cacheWriteTokens?: number
   reasoningTokens?: number
+  totalTokens?: number
+}
+
+/** Compact timed stream record embedded in `assistant/message` / `assistant/attempt` (v4). */
+export interface StreamRecord {
+  type: string
+  time0?: number
+  time?: number
+  dt?: number[]
+  texts?: string[]
+  chunk?: { type?: string; [key: string]: JsonValue | undefined }
 }
 
 /** Packed chunk rows — the one wire shape that is not a SessionEvent. */
@@ -77,6 +96,8 @@ export interface ContentBlock {
 export interface MessageLike {
   id?: string
   role?: string
+  isError?: boolean
+  toolCallId?: string
   content?: ContentBlock[]
   source?: { kind?: string; [key: string]: JsonValue | undefined }
 }
@@ -87,4 +108,6 @@ export interface ParsedSession {
   events: SessionEvent[]
   /** Lines (or rows) that failed to decode — kept for diagnostics, never dropped silently. */
   malformed: { line: number; raw: string; error: string }[]
+  /** Exact fork-inherited prefix length when the reader reported it. */
+  inheritedEventCount?: number
 }

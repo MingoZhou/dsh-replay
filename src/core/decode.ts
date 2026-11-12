@@ -119,7 +119,8 @@ export function parseSessionJsonl(text: string): ParsedSession {
 export function fromInspection(
   header: SessionHeader,
   records: StorageRecord[],
+  inheritedEventCount?: number,
 ): ParsedSession {
   const events = records.flatMap(decodeStorageRecord).sort((a, b) => a.seq - b.seq)
-  return { header, events, malformed: [] }
+  return { header, events, malformed: [], ...(inheritedEventCount === undefined ? {} : { inheritedEventCount }) }
 }

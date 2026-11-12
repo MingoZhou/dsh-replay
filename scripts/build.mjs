@@ -15,16 +15,17 @@ const cssAsText = { loader: { '.css': 'text' } }
 await mkdir('lib', { recursive: true })
 await mkdir('demo/dist', { recursive: true })
 
-// ---- optional mascot artwork (assets/jingxiaoshen.{png,jpg,jpeg,webp}) ----
-// Drop your artwork there and it replaces the built-in SVG mascot everywhere
-// in the UI (and in exported HTML). Cap 1.5 MB; square images look best.
+// ---- mascot artwork ----
+// The UI embeds a small avatar only: assets/mascot-192.{webp,png,jpg} (a
+// 192 px square, ~10 KB). Anything over 60 KB is refused — the image is
+// inlined into the client bundle, the viewer bundle and every exported HTML
+// file, so its weight is paid three times. Without one, the built-in SVG is used.
 {
   const { readFile, stat } = await import('node:fs/promises')
   const candidates = [
-    ['assets/jingxiaoshen.png', 'image/png'],
-    ['assets/jingxiaoshen.jpg', 'image/jpeg'],
-    ['assets/jingxiaoshen.jpeg', 'image/jpeg'],
-    ['assets/jingxiaoshen.webp', 'image/webp'],
+    ['assets/mascot-192.webp', 'image/webp'],
+    ['assets/mascot-192.png', 'image/png'],
+    ['assets/mascot-192.jpg', 'image/jpeg'],
   ]
   let source = 'export const mascotImage: string | undefined = undefined\n'
   let found = false
@@ -32,19 +33,19 @@ await mkdir('demo/dist', { recursive: true })
     try {
       const info = await stat(file)
       found = true
-      if (info.size > 1_500_000) {
-        console.warn(`mascot: ${file} is ${Math.round(info.size / 1024)} KB — compress it to ≤1.5 MB to embed; using built-in SVG for now`)
+      if (info.size > 60_000) {
+        console.warn(`mascot: ${file} is ${Math.round(info.size / 1024)} KB — resize it to 192×192 (≤60 KB) to embed; using built-in SVG for now`)
       } else {
         const b64 = (await readFile(file)).toString('base64')
         source = `export const mascotImage: string | undefined = 'data:${mime};base64,${b64}'\n`
-        console.log(`mascot: embedded ${file} (${Math.round(info.size / 1024)} KB)`)
+        console.log(`mascot: embedded ${file} (${(info.size / 1024).toFixed(1)} KB)`)
       }
       break
     } catch {
       /* try next candidate */
     }
   }
-  if (!found) console.log('mascot: no assets/jingxiaoshen.{png,jpg,webp} found — using built-in SVG fallback')
+  if (!found) console.log('mascot: no assets/mascot-192.{webp,png,jpg} found — using built-in SVG fallback')
   await writeFile('src/client/mascot-image.ts', source)
 }
 
@@ -78,6 +79,7 @@ const client = await build({
   jsx: 'automatic',
   ...cssAsText,
   external: ['react', 'react/jsx-runtime', 'react-dom', 'react-dom/client', '@deepseek-ai/*'],
+  minify: true,
   write: false,
 })
 const cjs = client.outputFiles[0].text
@@ -128,4 +130,12 @@ await build({
   minify: true,
 })
 
-console.log('build ok: lib/index.js, lib/core.js, lib/client.js, lib/viewer.js, demo/dist/demo.js')
+{
+  const { stat } = await import('node:fs/promises')
+  const sizes = await Promise.all(
+    ['lib/index.js', 'lib/core.js', 'lib/client.js', 'lib/viewer.js', 'demo/dist/demo.js'].map(
+      async file => `${file} ${((await stat(file)).size / 1024).toFixed(0)} KB`,
+    ),
+  )
+  console.log(`build ok: ${sizes.join(' · ')}`)
+}

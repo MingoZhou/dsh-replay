@@ -9,7 +9,7 @@
  *    session picker (works without an open conversation).
  */
 import React, { useSyncExternalStore } from 'react'
-import { HttpReplayApi } from './api.js'
+import { HttpReplayApi, type HostBridge } from './api.js'
 import { ReplayApp } from './components/ReplayApp.js'
 import { ReplayModal } from './components/ReplayModal.js'
 import { detectLang, makeT } from './i18n.js'
@@ -27,12 +27,25 @@ interface SlotRegistryLike {
   register: (options: Record<string, unknown>, component: unknown) => () => void
 }
 
+interface ClientSessionsLike {
+  fork?: (opts: { sessionId: string; atSeq?: number; increaseTitle?: boolean }) => Promise<string>
+}
+
 interface ClientContextLike {
   slots: SlotRegistryLike
   effect: (callback: () => () => void, label?: string) => void
+  /** Cordis dynamic injection — runs the callback once the named services exist. */
+  inject?: (deps: string[], callback: (scope: { sessions?: ClientSessionsLike }) => void) => unknown
 }
 
 const api = new HttpReplayApi()
+
+/**
+ * Harness actions the UI may use when the host offers them. `sessions` is an
+ * optional dependency: without it the plugin still loads and the fork button
+ * simply stays hidden.
+ */
+const host: HostBridge = {}
 
 /** Tiny shared open/closed store bridging the sidebar button and the overlay. */
 function createOpenStore(): {
@@ -59,7 +72,7 @@ const modalStore = createOpenStore()
 
 /** Standard conversation-scope props the slot renderer passes down. */
 function ReplayTab(props: { sessionId?: string }): React.ReactElement {
-  return React.createElement(ReplayApp, { api, sessionId: props.sessionId })
+  return React.createElement(ReplayApp, { api, host, sessionId: props.sessionId })
 }
 
 /**
@@ -112,6 +125,7 @@ function ReplayOverlay(): React.ReactElement | null {
   const t = makeT(detectLang())
   return React.createElement(ReplayModal, {
     api,
+    host,
     onClose: () => modalStore.set(false),
     closeLabel: t('modal.close'),
   })
@@ -125,6 +139,16 @@ export function apply(ctx: ClientContextLike): void {
     document.head.append(style)
     return () => style.remove()
   }, 'dsh-replay: styles')
+
+  try {
+    ctx.inject?.(['sessions'], scope => {
+      const sessions = scope.sessions
+      if (typeof sessions?.fork !== 'function') return
+      host.fork = (sessionId, atSeq) => sessions.fork!({ sessionId, atSeq, increaseTitle: true })
+    })
+  } catch {
+    /* fork stays unavailable on hosts without the client sessions service */
+  }
 
   ctx.slots.inject('conversation.view', () =>
     ctx.slots.register(
