@@ -41,6 +41,8 @@ cross-session totals, sharing.
   `assistant/attempt`, seq-addressed surface replacement, `isSeeded`. Older
   logs still read. Forks without `parentSession` are linked by their shared
   first prompt and labelled as inferred.
+- `README.md` is now Chinese with a link to `README.en.md`; the install guide is split
+  by how you run the harness (desktop store, from source, release CLI).
 - UI chrome now uses the harness `--dsw-alias-*` tokens throughout; the mascot
   appears only in empty and loading states.
 - Client bundle is about 225 KB (was about 2 MB): the embedded mascot is a
